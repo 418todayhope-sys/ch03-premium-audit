@@ -1,0 +1,343 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "01M6PH49FR53AABARMSCWB4ZJ7",
+  "session_id": "01a1a9a5-25d0-7061-94e6-36bd7901e7e2",
+  "strategy": "manual-commit",
+  "created_at": "2026-11-05T18:57:33.15152975Z",
+  "branch": "main",
+  "checkpoints_count": 24,
+  "save_step_count": 22,
+  "files_touched": [
+    "README.md",
+    "deliverables/audit-questions.md",
+    "deliverables/audit-report.md",
+    "deliverables/classification-review.json",
+    "deliverables/codes/annapolis-courier.csv",
+    "deliverables/codes/bay-crest-exteriors.csv",
+    "deliverables/codes/harbor-point-legal.csv",
+    "deliverables/codes/larkspur-lane-bistro.csv",
+    "deliverables/codes/patuxent-electric.csv",
+    "deliverables/codes/severn-homebuilders.csv",
+    "interviews/ch03-premium-audit-20261105-0222(1).md",
+    "skills/class-code-assistant/AUDIT_QUESTIONS.md",
+    "skills/class-code-assistant/AUDIT_REPORT.md",
+    "skills/class-code-assistant/CSV_GENERATION.md",
+    "skills/class-code-assistant/EMPLOYER_PROCESSING.md",
+    "skills/class-code-assistant/PAYROLL_ADJUSTMENTS.md",
+    "skills/class-code-assistant/PAYROLL_ALLOCATION.md",
+    "skills/class-code-assistant/README.md",
+    "skills/class-code-assistant/RULE_EVALUATOR.md",
+    "skills/class-code-assistant/SKILL.md",
+    "skills/class-code-assistant/audit_questions.py",
+    "skills/class-code-assistant/audit_report.py",
+    "skills/class-code-assistant/contractor_processing.py",
+    "skills/class-code-assistant/courier_processing.py",
+    "skills/class-code-assistant/electrical_processing.py",
+    "skills/class-code-assistant/employer_processing.py",
+    "skills/class-code-assistant/generate_codes.py",
+    "skills/class-code-assistant/homebuilding_processing.py",
+    "skills/class-code-assistant/input_reader.py",
+    "skills/class-code-assistant/legal_office_processing.py",
+    "skills/class-code-assistant/payroll_adjustments.py",
+    "skills/class-code-assistant/payroll_allocation.py",
+    "skills/class-code-assistant/preview.py",
+    "skills/class-code-assistant/rule_evaluator.py",
+    "skills/class-code-assistant/tests/test_audit_questions.py",
+    "skills/class-code-assistant/tests/test_audit_report.py",
+    "skills/class-code-assistant/tests/test_contractor_processing.py",
+    "skills/class-code-assistant/tests/test_courier_processing.py",
+    "skills/class-code-assistant/tests/test_electrical_processing.py",
+    "skills/class-code-assistant/tests/test_employer_processing.py",
+    "skills/class-code-assistant/tests/test_generate_codes.py",
+    "skills/class-code-assistant/tests/test_homebuilding_processing.py",
+    "skills/class-code-assistant/tests/test_input_reader.py",
+    "skills/class-code-assistant/tests/test_legal_office_processing.py",
+    "skills/class-code-assistant/tests/test_payroll_adjustments.py",
+    "skills/class-code-assistant/tests/test_payroll_allocation.py",
+    "skills/class-code-assistant/tests/test_preview.py",
+    "skills/class-code-assistant/tests/test_rule_evaluator.py",
+    "skills/class-code-assistant/tests/test_skill_package.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-6.1-sol",
+  "turn_id": "29715004de3b",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 1003880,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 64396160,
+    "output_tokens": 625171,
+    "api_call_count": 499,
+    "subagent_tokens": {
+      "input_tokens": 1461214,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 20777984,
+      "output_tokens": 147580,
+      "api_call_count": 435
+    },
+    "subagent_tokens_complete": true
+  },
+  "session_metrics": {
+    "turn_count": 24
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-11-05T18:57:31.525173621Z",
+    "agent_lines": 90252,
+    "agent_removed": 8,
+    "human_added": 2611,
+    "human_modified": 14,
+    "human_removed": 0,
+    "total_committed": 92877,
+    "total_lines_changed": 92885,
+    "agent_percentage": 97.17392474565322,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 707,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 3,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1226,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 4,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1875,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 5,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 2509,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 6,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 3544,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 7,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4324,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 8,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 4808,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 9,
+      "user_lines_added": 333,
+      "user_lines_removed": 0,
+      "agent_lines_added": 5483,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        "docs/superpowers/plans/2026-11-05-homebuilding-processing.md": 18,
+        "skills/class-code-assistant/tests/test_homebuilding_processing.py": 227
+      }
+    },
+    {
+      "checkpoint_number": 10,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 6236,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 11,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 6987,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 12,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 7724,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 13,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 8412,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 14,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 8752,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 15,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 74382,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 16,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 84280,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 17,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 90917,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 18,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 91217,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 19,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 91217,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 20,
+      "user_lines_added": 319,
+      "user_lines_removed": 7,
+      "agent_lines_added": 91308,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        "deliverables/audit-questions.md": 36,
+        "deliverables/audit-report.md": 25,
+        "deliverables/classification-review.json": 170
+      },
+      "user_removed_per_file": {
+        "deliverables/audit-report.md": 3,
+        "deliverables/classification-review.json": 4
+      }
+    },
+    {
+      "checkpoint_number": 21,
+      "user_lines_added": 319,
+      "user_lines_removed": 7,
+      "agent_lines_added": 91308,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88,
+        "deliverables/audit-questions.md": 36,
+        "deliverables/audit-report.md": 25,
+        "deliverables/classification-review.json": 170
+      },
+      "user_removed_per_file": {
+        "deliverables/audit-report.md": 3,
+        "deliverables/classification-review.json": 4
+      }
+    },
+    {
+      "checkpoint_number": 22,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 91532,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    },
+    {
+      "checkpoint_number": 23,
+      "user_lines_added": 88,
+      "user_lines_removed": 0,
+      "agent_lines_added": 91530,
+      "agent_lines_removed": 22,
+      "user_added_per_file": {
+        ".codex/hooks.json": 88
+      }
+    }
+  ]
+}
