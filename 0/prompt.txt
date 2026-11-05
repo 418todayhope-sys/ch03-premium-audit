@@ -553,3 +553,24 @@ The authorized local commit stopped because git diff --cached --check detected e
 Do not commit yet. Do not push, synchronize, upload, or submit anything.
 
 Report the verification results and whether the existing authorized local commit can proceed.
+
+---
+
+INSURANCE-01 — Step 39B: Complete the authorized local commit.
+
+The 52 reviewed submission files are staged. All 338 tests pass, git diff --cached --check passes, and regenerated deliverables match.
+
+I authorize creating the previously approved ONE local Git commit.
+
+1. Confirm the staged manifest still contains exactly the 52 reviewed files.
+2. Create the local commit with message:
+   "Implement reusable premium audit skill and deliverables"
+3. Allow Entire's normal Git hooks to execute. Do not bypass them.
+4. Verify the commit SHA, Git status, and committed file count.
+5. Inspect the commit for an Entire-Checkpoint trailer and verify the associated capture records.
+6. Confirm that the final Larkspur correction and all required deliverables are included.
+7. Report any checkpoint or session-state issues without attempting destructive repairs.
+
+Do not amend, reset, rewrite history, push, synchronize, upload, deploy, or submit.
+
+If the commit fails, stop and report the exact error.
