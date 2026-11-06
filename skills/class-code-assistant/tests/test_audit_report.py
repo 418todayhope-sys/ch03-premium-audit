@@ -2,7 +2,7 @@
 
 from copy import deepcopy
 import csv
-from decimal import localcontext
+from decimal import Decimal, localcontext
 import hashlib
 import importlib
 import json
@@ -17,6 +17,9 @@ from unittest.mock import patch
 from test_electrical_processing import APPLICATION, BUSINESS, GUIDE, INTERVIEW, NOTES, PAYROLL, SIGNINS
 from audit_questions import generate_questions
 from generate_codes import generate_csvs
+from real_audit_support import (
+    fresh_real_chain, source_controls, source_open_workers, source_rows, source_subcontractors,
+)
 
 COMPONENT = Path(__file__).resolve().parents[1]
 REPO = COMPONENT.parents[1]
@@ -246,16 +249,10 @@ class RealAuditReportTests(unittest.TestCase):
         if not CLI.is_file():
             return
         cls.module = importlib.import_module("audit_report")
-        cls.review = REPO / "deliverables/classification-review.json"
-        cls.codes = REPO / "deliverables/codes"
-        cls.questions = REPO / "deliverables/audit-questions.md"
-        cls.state = json.loads(cls.review.read_text())
-        if not Path(cls.state["processing"]["guide"]).is_file():
-            raise unittest.SkipTest("Auditor-supplied local snapshots are unavailable; synthetic tests remain portable")
-        cls.temp = tempfile.TemporaryDirectory()
-        cls.addClassCleanup(cls.temp.cleanup)
-        cls.output = Path(cls.temp.name) / "real report.md"
-        cls.report = cls.module.generate_report(cls.review, codes_dir=cls.codes, questions=cls.questions, output=cls.output)
+        cls.chain = fresh_real_chain(cls.addClassCleanup)
+        cls.review, cls.codes = cls.chain.review, cls.chain.codes
+        cls.questions, cls.output = cls.chain.questions, cls.chain.output
+        cls.state, cls.report = cls.chain.state, cls.chain.report
         cls.text = cls.output.read_text()
 
     def setUp(self):
@@ -290,8 +287,39 @@ class RealAuditReportTests(unittest.TestCase):
 
     def test_every_material_obligation_is_linked_to_existing_questions(self):
         self.assertEqual(self.report["uncovered"], {})
-        self.assertEqual(self.report["coverage"], {"employers": 6, "employees": 45, "payroll_parts": 351,
-            "adjustments": 15, "findings": 22, "proposals": 9, "questions": 78, "sources": 3354, "records": 3287})
+        plan = self.module.load_report_plan(self.review, codes_dir=self.codes, questions=self.questions)
+        employee_count = part_count = adjustment_count = record_count = 0
+        for employer in plan["employers"]:
+            entry = employer["entry"]
+            directory = Path(entry["directory"])
+            payroll = source_rows(directory / "payroll-register.csv")
+            employee_count += len(payroll)
+            weekly = directory / "weekly-payroll.csv"
+            part_count += len(source_rows(weekly)) if weekly.exists() else len(payroll)
+            payments = directory / "subcontractor-payments.csv"
+            adjustment_count += len(source_rows(payments)) if payments.exists() else 0
+            adjustment_count += sum("travel_allowance_paid" in r for r in payroll)
+            source_records = [(str(path), line) for path in directory.glob("*.csv")
+                              for line in range(2, len(source_rows(path)) + 2)]
+            record_count += len(source_records)
+            self.assertEqual({(r["source"], r["line_start"]) for r in employer["records"]}, set(source_records))
+            covered = set().union(*(item["covers"] for item in employer["items"]))
+            self.assertTrue({f"employee:{r['employee_id']}" for r in payroll} <= covered)
+            self.assertTrue({f"record:{r['id']}" for r in employer["records"]} <= covered)
+            self.assertTrue({f"source:{r['id']}" for r in employer["sources"]} <= covered)
+            self.assertTrue({f"finding:{i}" for i in range(len(entry["questions"]))} <= covered)
+            self.assertTrue({f"proposal:{i}" for i in range(len(entry["proposals"]))} <= covered)
+            self.assertTrue({f"control:{name}" for name, value in entry["reconciliation"].items() if value is not None} <= covered)
+            self.assertTrue(all(item["confirm"] for item in employer["items"]))
+        coverage = self.report["coverage"]
+        self.assertEqual(coverage["employers"], len(plan["employers"]))
+        self.assertEqual(coverage["employees"], employee_count)
+        self.assertEqual(coverage["payroll_parts"], part_count)
+        self.assertEqual(coverage["adjustments"], adjustment_count)
+        self.assertEqual(coverage["records"], record_count)
+        for metric, collection in (("findings", "questions"), ("proposals", "proposals"), ("sources", "sources")):
+            self.assertEqual(coverage[metric], sum(len(e["entry"][collection]) for e in plan["employers"]))
+        self.assertEqual(coverage["questions"], sum(len(e["items"]) for e in plan["employers"]))
         anchors = set(re.findall(r'<a id="([^"]+)"></a>', self.questions.read_text()))
         links = re.findall(r"audit-questions\.md#([^ )]+)", self.text)
         self.assertTrue(links)
@@ -304,8 +332,31 @@ class RealAuditReportTests(unittest.TestCase):
     def test_open_wage_omissions_are_provisional_not_verified_reductions(self):
         self.assertIn("provisional comparison", self.text)
         self.assertIn("not a verified payroll reduction", self.text)
-        for amount in ("64212.48", "114293.80", "71250.45", "45945.65", "390.00"):
-            self.assertIn(amount, self.text)
+        for entry in self.state["processing"]["employers"]:
+            directory = Path(entry["directory"])
+            payroll = source_rows(directory / "payroll-register.csv")
+            expected_open = source_open_workers(directory, payroll)
+            employees = {e["employee_id"]: e for e in entry["employee_payroll"]}
+            law_office = "law office" in " ".join((directory / "business-description.md").read_text().split())
+            for row in payroll:
+                employee = employees[row["employee_id"]]
+                is_open = row["employee_id"] in expected_open
+                self.assertEqual(Decimal(employee["open_wages"]),
+                                 Decimal(row["wages_paid"]) if is_open else Decimal("0.00"))
+                self.assertEqual({p["status"] for p in employee["parts"]}, {"OPEN" if is_open else "ALLOCATED"})
+                self.assertIn(row["wages_paid"], self.text)
+                if is_open and law_office:
+                    proposal, = [p["treatment"] for p in entry["proposals"] if p["subject"] == row["employee_id"]]
+                    self.assertEqual((proposal["class_code"], proposal["rationale_ref"]), ("C-110", "CG-04"))
+                    self.assertEqual(Decimal(proposal["wages"]), Decimal(row["wages_paid"]))
+                    self.assertTrue(proposal["required_confirmation"])
+                    self.assertIn(f"**UNAPPROVED — {row['employee_id']}**", self.text)
+                if row.get("travel_days") == "0" and Decimal(row.get("travel_allowance_paid", "0")):
+                    line = next(line for line in entry["adjustments"]["lines"]
+                                if line["adjustment_id"] == f"travel:{row['employee_id']}")
+                    self.assertEqual(line["status"], "OPEN")
+                    self.assertEqual(Decimal(line["payroll_added"]), Decimal("0.00"))
+                    self.assertEqual(Decimal(line["proposal"]["payroll_added"]), Decimal(row["travel_allowance_paid"]))
 
     def test_open_catering_conditional_proposals_reach_report_without_changing_csv(self):
         entry = next(e for e in self.state["processing"]["employers"] if e["employer"] == "larkspur-lane-bistro")
@@ -329,10 +380,129 @@ class RealAuditReportTests(unittest.TestCase):
         self.assertEqual(self.report["uncovered"], {})
 
     def test_global_reconciliation_keeps_basis_and_known_payroll_distinct(self):
-        self.assertIn("2521697.11 + 26853.39 = 2298793.77 + 249756.73", self.text)
-        self.assertIn("2683038.16 = 2298793.77 + 249756.73 + 88152.01 + 46335.65", self.text)
+        expected, employers = source_controls(self.chain.inputs)
+        employee_equation = "{register:.2f} + {added:.2f} = {verified:.2f} + {open_wages:.2f}".format(**expected)
+        cash_equation = "{cash:.2f} = {verified:.2f} + {open_wages:.2f} + {nonpayroll:.2f} + {open_basis:.2f}".format(**expected)
+        self.assertTrue(employee_equation in self.text, employee_equation)
+        self.assertTrue(cash_equation in self.text, cash_equation)
+        for entry, result in zip(self.state["processing"]["employers"], self.report["employers"]):
+            original = employers[entry["employer"]]
+            self.assertEqual(Decimal(result["verified_total"]), original["verified"])
+            self.assertEqual(Decimal(result["open_wages"]), original["open_wages"])
+            self.assertEqual(Decimal(entry["reconciliation"]["independent"]["register_total"]), original["register"])
+            for check in entry["reconciliation"].values():
+                if check is not None:
+                    self.assertTrue(check["reconciled"])
+                    self.assertEqual(Decimal(check["difference"]), Decimal("0.00"))
         self.assertIn("Known payroll basis (includes OPEN wages)", self.text)
         self.assertIn("NOT EVALUATED", self.text)
+
+    def test_severn_codes_and_review_obligations_follow_original_records(self):
+        directory, = [p for p in (self.chain.inputs / "employer-files").iterdir()
+                      if (p / "subcontractor-payments.csv").is_file()]
+        payroll = source_rows(directory / "payroll-register.csv")
+        visits = source_rows(directory / "site-signin-log.csv")
+        employees = {r["employee_id"]: r for r in payroll}
+        external = [r for r in visits if r["employee_id"] not in employees]
+        self.assertTrue(external)
+        self.assertTrue(all(not r["employee_id"] and r["name"] == "County inspector" for r in external))
+        field_roles = {"Lead Carpenter", "Carpenter", "Laborer"}
+        field_wages = sum(Decimal(r["wages_paid"]) for r in payroll if r["position"] in field_roles)
+        payments = source_rows(directory / "subcontractor-payments.csv")
+        competing = sum(Decimal(p["amount_paid"]) for p in payments if p["work"] == "roofing")
+        self.assertGreater(field_wages, competing, "CG-15 own-crew wages establish H-420 without circular office wages")
+        expected_codes, employee_codes = {}, {}
+        for row in payroll:
+            days = {r["date"] for r in visits if r["employee_id"] == row["employee_id"] and r["name"] == row["name"]}
+            if row["position"] in field_roles:
+                code = "H-420"
+            else:
+                self.assertIn(row["position"], {"Estimator", "Office Manager", "Bookkeeper"})
+                code = "C-110" if len(days) <= 4 else "H-420"
+            employee_codes[row["employee_id"]] = code
+            expected_codes[code] = expected_codes.get(code, Decimal("0.00")) + Decimal(row["wages_paid"])
+        sub, additions, open_invoices = source_subcontractors(directory)
+        for code, amount in additions.items():
+            expected_codes[code] = expected_codes.get(code, Decimal("0.00")) + amount
+        entry = next(e for e in self.state["processing"]["employers"] if Path(e["directory"]) == directory)
+        self.assertEqual({code: Decimal(amount) for code, amount in entry["verified_by_code"].items()}, expected_codes)
+        guide_codes = dict((code, paragraph) for paragraph, code in re.findall(
+            r"(?m)^\*\*(CG-\d+)\. ([A-Z]-\d+)\b", self.chain.guide.read_text()))
+        actual_rows = source_rows(self.codes / f"{directory.name}.csv")
+        self.assertEqual(actual_rows, [{"class_code": code, "payroll_allocated": f"{amount:.2f}",
+                                      "rationale_ref": guide_codes[code]} for code, amount in sorted(expected_codes.items())])
+        for employee in entry["employee_payroll"]:
+            original = employees[employee["employee_id"]]
+            self.assertEqual(employee["verified_wages_by_code"],
+                             {employee_codes[original["employee_id"]]: original["wages_paid"]})
+            self.assertEqual(Decimal(employee["open_wages"]), Decimal("0.00"))
+        lines = entry["adjustments"]["lines"]
+        self.assertEqual({line["adjustment_id"] for line in lines if line["status"] == "OPEN"}, open_invoices)
+        proposals = {p["subject"]: p for p in entry["proposals"]}
+        findings = {q["subject"]: q for q in entry["questions"]}
+        self.assertEqual(set(proposals), open_invoices)
+        self.assertTrue(open_invoices <= set(findings))
+        refs = {ref["id"]: ref for ref in entry["sources"]}
+        certificates = source_rows(directory / "insurance-certificates.csv")
+        certificate, = [c for c in certificates if "roof" in c["subcontractor"].casefold()]
+        question_blocks = re.split(r"(?m)(?=^### )", self.questions.read_text())
+        for line in lines:
+            if line["adjustment_id"] in open_invoices:
+                invoice = line["adjustment_id"]
+                payment = next(p for p in payments if p["invoice"] == invoice)
+                self.assertEqual(Decimal(line["payroll_added"]), Decimal("0.00"))
+                self.assertEqual(Decimal(line["proposal"]["payroll_added"]), Decimal(payment["amount_paid"]) * Decimal("0.60"))
+                self.assertEqual(Decimal(proposals[invoice]["treatment"]["payroll_added"]),
+                                 Decimal(payment["amount_paid"]) * Decimal("0.60"))
+                for obligation, citation_field in ((findings[invoice], "sources"),
+                                                   (proposals[invoice], "evidence_sources")):
+                    self.assertTrue(obligation["required_confirmation"])
+                    self.assertIn("identity", str(obligation["required_confirmation"]).lower())
+                    evidence = [refs[key] for key in obligation[citation_field]]
+                    self.assertTrue(any(ref["source"] == str(directory / "subcontractor-payments.csv")
+                                        and ref["line_start"] == payments.index(payment) + 2 for ref in evidence))
+                    self.assertTrue(any(ref["source"] == str(directory / "insurance-certificates.csv")
+                                        and ref["line_start"] == certificates.index(certificate) + 2 for ref in evidence))
+                block, = [b for b in question_blocks if b.startswith("### ")
+                          and payment["subcontractor"] in b.splitlines()[0]]
+                for detail in (invoice, payment["subcontractor"], certificate["subcontractor"],
+                               "subcontractor-payments.csv", "insurance-certificates.csv",
+                               "OPEN / HUMAN APPROVAL REQUIRED", "UNAPPROVED PROPOSAL"):
+                    self.assertTrue(detail in block, f"Missing {detail} in {invoice}'s confirmation question")
+                self.assertIn(f"**OPEN — {invoice}**", self.text)
+                self.assertIn(f"**UNAPPROVED — {invoice}**", self.text)
+        self.assertEqual(Decimal(entry["open_adjustment_basis"]), sub["open_basis"])
+        self.assertEqual(Decimal(entry["reconciliation"]["combined"]["confirmed_payroll"]),
+                         sum(Decimal(r["wages_paid"]) for r in payroll) + sub["added"])
+        external_finding, = [q for q in entry["questions"] if q["subject"] == "External site visitors"]
+        self.assertTrue(external_finding["required_confirmation"])
+        self.assertTrue(any(Path(refs[key]["source"]).name == "site-signin-log.csv" for key in external_finding["sources"]))
+        estimator = next(r for r in payroll if r["position"] == "Estimator")
+        self.assertNotIn(estimator["employee_id"], {p["subject"] for p in entry["proposals"]})
+        decision = next(e for e in entry["employee_payroll"] if e["employee_id"] == estimator["employee_id"])["parts"][0]["decision"]
+        self.assertEqual((decision["class_code"], decision["rationale_ref"]), ("C-110", "CG-04"))
+        self.assertTrue(any(refs[key]["source"] == str(self.chain.interview) for key in decision["rule_sources"]))
+        result = next(e for e in self.report["employers"] if e["employer"] == directory.name)
+        self.assertEqual(result["disposition"], "PARTIALLY UNRESOLVED")
+
+    def test_five_other_employer_results_and_csvs_match_the_preserved_baseline(self):
+        baseline = json.loads((REPO / "deliverables/classification-review.json").read_text())
+        previous = {e["employer"]: e for e in baseline["processing"]["employers"]}
+        old_root = str(Path(baseline["processing"]["guide"]).parent)
+        old_interview = baseline["processing"]["interview"]
+        def normalized(entry, root, interview):
+            return json.dumps(entry, sort_keys=True).replace(root, "INPUTS").replace(interview, "INTERVIEW")
+        compared = []
+        for entry in self.state["processing"]["employers"]:
+            if (Path(entry["directory"]) / "subcontractor-payments.csv").exists():
+                continue
+            with self.subTest(employer=entry["employer"]):
+                self.assertEqual(normalized(entry, str(self.chain.inputs), str(self.chain.interview)),
+                                 normalized(previous[entry["employer"]], old_root, old_interview))
+                filename = f"{entry['employer']}.csv"
+                self.assertEqual((self.codes / filename).read_bytes(), (REPO / "deliverables/codes" / filename).read_bytes())
+                compared.append(entry["employer"])
+        self.assertEqual(len(compared), 5)
 
     def test_names_identity_boundaries_owner_and_catering_uncertainty_survive(self):
         for detail in ("Tomas Reyes", "Marissa Gale", "County inspector", "2025-12-02", "Kent Island Roofing & Siding LLC",

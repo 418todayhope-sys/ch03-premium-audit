@@ -4,9 +4,9 @@ VERIFIED describes evidence-supported calculations, not final audit approval. OP
 
 Responsible policy reviewer: auditor assigned to this file. Employer payroll/records contact confirms duties, identities, payment purposes and source completeness; the auditor decides rule applicability and approves any proposed treatment. Named policy authorities retain their original interview citations below; those citations do not appoint a reviewer for a new audit. No stakeholder has been contacted by this generator.
 
-Review state: /home/maxg/ch03-premium-audit/deliverables/classification-review.json. SHA-256 2c2b20f534cd015aa186778713ac0a1a2f3785fc0dbd001cb9c4dcfa273a57a8.
+Review state: /home/maxg/ch03-premium-audit/deliverables/classification-review.json. SHA-256 8c00fc158516185cb984d16d968352de0f7aadee52a5c7d6534d2acaeb50af8a.
 
-Question document: [audit-questions.md](audit-questions.md); SHA-256 7c23a93a86af5735976f2e0b748cda8e836f772324c94be46cb0d9a640ef7ce3.
+Question document: [audit-questions.md](audit-questions.md); SHA-256 186e079c30bab409b8c4735d69fadb9532286b060208c2831587c6deb321909e.
 
 ## Employer conclusions
 
@@ -17,7 +17,7 @@ Question document: [audit-questions.md](audit-questions.md); SHA-256 7c23a93a86a
 | Harbor Point Legal | PARTIALLY UNRESOLVED | 360935.68 | 64212.48 | NOT EVALUATED |
 | Larkspur Lane Bistro | PARTIALLY UNRESOLVED | 226431.55 | 114293.80 | NOT EVALUATED |
 | Patuxent Electric | PARTIALLY UNRESOLVED | 470090.45 | 0.00 | 390.00 |
-| Severn Homebuilders | PARTIALLY UNRESOLVED | 415322.64 | 71250.45 | 45945.65 |
+| Severn Homebuilders | PARTIALLY UNRESOLVED | 486573.09 | 0.00 | 45945.65 |
 
 ## Recorded priority calls
 
@@ -33,9 +33,9 @@ Payment controls include only the evaluated adjustment records. NOT EVALUATED em
 
 Employee reconciliation (original register + verified additions = verified classified payroll + OPEN wages):
 
-`2521697.11 + 26853.39 = 2298793.77 + 249756.73`; difference 0.00.
+`2521697.11 + 26853.39 = 2370044.22 + 178506.28`; difference 0.00.
 
-Known payroll basis (includes OPEN wages): $2548550.50. Verified classified payroll: $2298793.77.
+Known payroll basis (includes OPEN wages): $2548550.50. Verified classified payroll: $2370044.22.
 
 Payment reconciliation (evaluated payment basis = verified addition + nonpayroll + OPEN payment basis):
 
@@ -43,7 +43,7 @@ Payment reconciliation (evaluated payment basis = verified addition + nonpayroll
 
 Cash reconciliation (original wages + evaluated payments = verified payroll + OPEN wages + excluded/nonpayroll payments + OPEN payment basis):
 
-`2683038.16 = 2298793.77 + 249756.73 + 88152.01 + 46335.65`; difference 0.00.
+`2683038.16 = 2370044.22 + 178506.28 + 88152.01 + 46335.65`; difference 0.00.
 
 <a id="e01"></a>
 ## Annapolis Courier (annapolis-courier)
@@ -5256,11 +5256,11 @@ Audit period: 2025-07-07 through 2026-07-05. Submitted split: **PARTIALLY UNRESO
 
 Verified corrections and supported components are shown below; the full submitted split cannot yet be accepted. Differences are a **provisional comparison** of verified CSV payroll minus reported payroll. An OPEN wage omission is **not a verified payroll reduction**; unresolved payment basis may change the final allocation after evidence and approval.
 
-Verified-only CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; SHA-256 4dd5979377d949d81c05d6f7d46eaa78832702aa47721312b61932691d6549f5.
+Verified-only CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; SHA-256 e437c6c7360972513326d02efa546efb74f9d920f000eed00ba82c1520d63141.
 
 | Code | Reported payroll | Verified payroll | Difference (verified minus reported) | Verified code paragraph |
 | --- | --- | --- | --- | --- |
-| C-110 | 177209.40 | 46118.25 | -131091.15 | CG-04 |
+| C-110 | 177209.40 | 117368.70 | -59840.70 | CG-04 |
 | H-420 | 284670.30 | 369204.39 | 84534.09 | CG-15 |
 
 Reported total $461879.70; original register $461879.70; register-minus-reported difference $0.00. Comparison definitive for current classifications: False (not human approval).
@@ -5278,7 +5278,7 @@ Application sources: S0050 application.md:7-7 (application class H-420); S0051 a
 | SH-E03 | Peter Kowal | 58442.60 | H-420 58442.60 | — | 0.00 | S0007 payroll-register.csv:4-4 (CSV line 4) |
 | SH-E04 | Andre Sutton | 49905.85 | H-420 49905.85 | — | 0.00 | S0008 payroll-register.csv:5-5 (CSV line 5) |
 | SH-E05 | Colin Rusk | 47226.30 | H-420 47226.30 | — | 0.00 | S0009 payroll-register.csv:6-6 (CSV line 6) |
-| SH-E06 | Marissa Gale | 71250.45 | — | — | 71250.45 | S0010 payroll-register.csv:7-7 (CSV line 7) |
+| SH-E06 | Marissa Gale | 71250.45 | C-110 71250.45 | — | 0.00 | S0010 payroll-register.csv:7-7 (CSV line 7) |
 | SH-E07 | Dana Whitcomb | 59840.70 | H-420 59840.70 | — | 0.00 | S0029 payroll-register.csv:8-8 (CSV line 8) |
 | SH-E08 | Helen Ostrow | 46118.25 | C-110 46118.25 | — | 0.00 | S0041 payroll-register.csv:9-9 (CSV line 9) |
 
@@ -5291,7 +5291,7 @@ Employee-level application assignments below are marked inferred where the engin
 | SH-E03 Peter Kowal | 58442.60 | H-420 | H-420 | UNCHANGED | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0007 payroll-register.csv:4-4 (CSV line 4); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
 | SH-E04 Andre Sutton | 49905.85 | H-420 | H-420 | UNCHANGED | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0008 payroll-register.csv:5-5 (CSV line 5); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
 | SH-E05 Colin Rusk | 47226.30 | H-420 | H-420 | UNCHANGED | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0009 payroll-register.csv:6-6 (CSV line 6); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
-| SH-E06 Marissa Gale | 71250.45 | C-110 | OPEN | OPEN | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0010 payroll-register.csv:7-7 (CSV line 7); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
+| SH-E06 Marissa Gale | 71250.45 | C-110 | C-110 | UNCHANGED | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0010 payroll-register.csv:7-7 (CSV line 7); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
 | SH-E07 Dana Whitcomb | 59840.70 | C-110 | H-420 | CHANGE | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0029 payroll-register.csv:8-8 (CSV line 8); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
 | SH-E08 Helen Ostrow | 46118.25 | C-110 | C-110 | UNCHANGED | INFERRED — confirm | Reported code is inferred from a unique exact application headcount/wage partition; employer confirmation is required. S0041 payroll-register.csv:9-9 (CSV line 9); S0050 application.md:7-7 (application class H-420); S0051 application.md:8-8 (application class C-110) |
 
@@ -5302,7 +5302,6 @@ Each decision retains the existing evaluator's scope and conditions. OPEN decisi
 | Rule | Decision status | Scope | Applicability boundaries | Exact rule sources |
 | --- | --- | --- | --- | --- |
 | documented_homebuilding_work | CLASSIFIED | whole_audit_period | documented construction/trade work; verified current guide definition | S0002 classification-guide.md:15-16 (CG-02); S0003 classification-guide.md:44-46 (CG-15) |
-| employer_evidence | OPEN | whole_audit_period | documented actual duties and audit period | S0002 classification-guide.md:15-16 (CG-02); S0003 classification-guide.md:44-46 (CG-15); S0011 classification-guide.md:32-34 (CG-04); S0012 ch03-premium-audit-20261105-0222(1).md:153-155 (Nadia Brennan · 06:03 PM); S0013 ch03-premium-audit-20261105-0222(1).md:305-307 (Nadia Brennan · 06:10 PM); S0014 ch03-premium-audit-20261105-0222(1).md:545-547 (Nadia Brennan · 09:06 PM) |
 | contractor_office_visits | CLASSIFIED | whole_audit_period | contractor employer; office employee by actual duties; complete audit-period site sign-in evidence; five or more days requires an evidenced unique governing field code | S0002 classification-guide.md:15-16 (CG-02); S0003 classification-guide.md:44-46 (CG-15); S0011 classification-guide.md:32-34 (CG-04); S0012 ch03-premium-audit-20261105-0222(1).md:153-155 (Nadia Brennan · 06:03 PM); S0013 ch03-premium-audit-20261105-0222(1).md:305-307 (Nadia Brennan · 06:10 PM); S0014 ch03-premium-audit-20261105-0222(1).md:545-547 (Nadia Brennan · 09:06 PM) |
 | documented_homebuilding_work | CLASSIFIED | whole_audit_period | documented construction/trade work; verified current guide definition | S0002 classification-guide.md:15-16 (CG-02); S0053 classification-guide.md:36-37 (CG-11) |
 
@@ -5310,9 +5309,9 @@ Each decision retains the existing evaluator's scope and conditions. OPEN decisi
 
 Employee reconciliation (original register + verified additions = verified classified payroll + OPEN wages):
 
-`461879.70 + 24693.39 = 415322.64 + 71250.45`; difference 0.00.
+`461879.70 + 24693.39 = 486573.09 + 0.00`; difference 0.00.
 
-Known payroll basis (includes OPEN wages): $486573.09. Verified classified payroll: $415322.64.
+Known payroll basis (includes OPEN wages): $486573.09. Verified classified payroll: $486573.09.
 
 Payment reconciliation (evaluated payment basis = verified addition + nonpayroll + OPEN payment basis):
 
@@ -5320,7 +5319,7 @@ Payment reconciliation (evaluated payment basis = verified addition + nonpayroll
 
 Cash reconciliation (original wages + evaluated payments = verified payroll + OPEN wages + excluded/nonpayroll payments + OPEN payment basis):
 
-`613996.75 = 415322.64 + 71250.45 + 81478.01 + 45945.65`; difference 0.00.
+`613996.75 = 486573.09 + 0.00 + 81478.01 + 45945.65`; difference 0.00.
 
 | Engine control | Reconciled | Difference |
 | --- | --- | --- |
@@ -5337,9 +5336,7 @@ Governing field code: H-420; supported field payroll H-420 284670.30. Verified o
 
 Each finding remains unanswered even if its monetary effect is zero. Employer payroll/records contact supplies the requested records; responsible policy reviewer: auditor. Identity issues require documentary confirmation of the exact employee/payee, not an assumed alias.
 
-- **OPEN — Unattributed site sign-ins**: No employee identity is assumed for unmatched sign-ins; dates provide possible-visit bounds only. Required evidence/confirmation: Confirm whether the unmatched entries are nonpayroll visitors and correct any missing employee identities. Responsible fact reviewer: employer payroll/records contact; responsible policy reviewer: auditor. Questions: [E06-Q016](audit-questions.md#e06-q016). Records: S0020 site-signin-log.csv:8-8 (CSV line 8).
-
-- **OPEN — Marissa Gale [SH-E06]**: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period. Required evidence/confirmation: Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period. Responsible fact reviewer: employer payroll/records contact; responsible policy reviewer: auditor. Questions: [E06-Q006](audit-questions.md#e06-q006). Records: S0001 payroll-register.csv:2-2 (CSV line 2); S0002 classification-guide.md:15-16 (CG-02); S0003 classification-guide.md:44-46 (CG-15); S0004 business-description.md:1-7 (business description); S0005 field-notes.md:1-8 (auditor field notes); S0006 payroll-register.csv:3-3 (CSV line 3); S0007 payroll-register.csv:4-4 (CSV line 4); S0008 payroll-register.csv:5-5 (CSV line 5); S0009 payroll-register.csv:6-6 (CSV line 6); S0010 payroll-register.csv:7-7 (CSV line 7); S0011 classification-guide.md:32-34 (CG-04); S0012 ch03-premium-audit-20261105-0222(1).md:153-155 (Nadia Brennan · 06:03 PM); S0013 ch03-premium-audit-20261105-0222(1).md:305-307 (Nadia Brennan · 06:10 PM); S0014 ch03-premium-audit-20261105-0222(1).md:545-547 (Nadia Brennan · 09:06 PM); S0015 site-signin-log.csv:1-17 (examined audit-period site sign-in log); S0016 site-signin-log.csv:2-2 (CSV line 2); S0017 site-signin-log.csv:11-11 (CSV line 11); S0018 site-signin-log.csv:14-14 (CSV line 14); S0019 site-signin-log.csv:15-15 (CSV line 15); S0020 site-signin-log.csv:8-8 (CSV line 8); S0021 subcontractor-payments.csv:2-2 (CSV line 2); S0022 subcontractor-payments.csv:3-3 (CSV line 3); S0023 subcontractor-payments.csv:4-4 (CSV line 4); S0024 subcontractor-payments.csv:5-5 (CSV line 5); S0025 subcontractor-payments.csv:6-6 (CSV line 6); S0026 subcontractor-payments.csv:7-7 (CSV line 7); S0027 subcontractor-payments.csv:8-8 (CSV line 8); S0028 subcontractor-payments.csv:9-9 (CSV line 9).
+- **OPEN — External site visitors**: The source explicitly records external governmental inspectors with no employee ID or matching payroll name; their visits are excluded from employee site-day bounds, with the original records retained. Required evidence/confirmation: Confirm the cited inspectors were external nonpayroll visitors, the recorded roles are accurate, and the employee sign-in records are complete; correct any conflicting identity evidence. Responsible fact reviewer: employer payroll/records contact; responsible policy reviewer: auditor. Questions: [E06-Q016](audit-questions.md#e06-q016). Records: S0020 site-signin-log.csv:8-8 (CSV line 8).
 
 - **OPEN — SV-KEN-01**: Certificate/payee names do not match exactly; confirm identity without assuming a name alias. Required evidence/confirmation: Auditor or employer must confirm Kent Island Roofing, record SV-KEN-01: Certificate/payee names do not match exactly; confirm identity without assuming a name alias. Responsible fact reviewer: employer payroll/records contact; responsible policy reviewer: auditor. Questions: [E06-Q010](audit-questions.md#e06-q010). Records: S0022 subcontractor-payments.csv:3-3 (CSV line 3); S0042 classification-guide.md:24-25 (CG-06); S0043 ch03-premium-audit-20261105-0222(1).md:369-371 (Nadia Brennan · 06:12 PM); S0044 ch03-premium-audit-20261105-0222(1).md:377-379 (Nadia Brennan · 06:12 PM); S0045 ch03-premium-audit-20261105-0222(1).md:577-579 (Nadia Brennan · 09:08 PM); S0046 ch03-premium-audit-20261105-0222(1).md:601-603 (Nadia Brennan · 09:09 PM); S0047 insurance-certificates.csv:3-3 (CSV line 3); S0048 insurance-certificates.csv:1-3 (complete supplied certificate inventory); S0049 field-notes.md:1-8 (subcontractor field observations).
 
@@ -5354,8 +5351,6 @@ Each finding remains unanswered even if its monetary effect is zero. Employer pa
 ### UNAPPROVED PROPOSED treatments
 
 These alternatives are outside all verified totals. They require the specific evidence below and explicit auditor approval, followed by a supported rerun.
-
-- **UNAPPROVED — SH-E06**: Candidate C-110; wage basis $71250.45; paragraph CG-04. Conditional treatment using only confirmed visits, pending identity/completeness confirmation; not a verified allocation. Required confirmation: Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period. Responsible policy reviewer: auditor; employer payroll/records contact supplies evidence. Questions: [E06-Q006](audit-questions.md#e06-q006).
 
 - **UNAPPROVED — SV-KEN-01**: Candidate R-310; proposed payroll $8580.00; proposed nonpayroll $5720.00. Conditional missing-full-period-coverage treatment only; confirm payee/certificate identity and any replacement coverage. This proposal contributes no verified payroll. Required confirmation: Auditor or employer must confirm Kent Island Roofing, record SV-KEN-01: Certificate/payee names do not match exactly; confirm identity without assuming a name alias. Responsible policy reviewer: auditor; employer payroll/records contact supplies evidence. Questions: [E06-Q010](audit-questions.md#e06-q010).
 
@@ -5449,17 +5444,13 @@ Required evidence and approval: employer payroll/records contact confirms the li
 
 #### E06-Q006 — Marissa Gale [SH-E06]
 
-**OPEN / HUMAN APPROVAL REQUIRED**. Follow-up: [E06-Q006](audit-questions.md#e06-q006).
+**VERIFIED CALCULATION / EMPLOYER CONFIRMATION**. Follow-up: [E06-Q006](audit-questions.md#e06-q006).
 
-Verified base-wage allocation: none. OPEN base wages: $71250.45; OPEN wages are excluded from CSV totals.
+Verified base-wage allocation: C-110 $71250.45. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
+Between 4 confirmed and 4 possible distinct site days; both bounds return C-110. 4 distinct job-site days is at most four in the audit period.
 
 Confirmed distinct site-visit dates: 2025-07-24, 2026-01-16, 2026-03-24, 2026-04-21. Unattributed rows remain unassigned; confirm completeness separately.
-
-UNAPPROVED alternatives from the cited office-visit rule: candidate C-110 using only 4 confirmed dates; governing field code H-420 only if human confirmation establishes the additional visit evidence (up to 5 distinct dates) and the rule applies. Both the identity and resulting treatment require approval; the unmatched record is not attributed.
-
-UNAPPROVED PROPOSAL for SH-E06: Conditional treatment using only confirmed visits, pending identity/completeness confirmation; not a verified allocation.
 
 | Unattributed source record | Date | Original employee ID | Original name | Site |
 | --- | --- | --- | --- | --- |
@@ -5467,11 +5458,7 @@ UNAPPROVED PROPOSAL for SH-E06: Conditional treatment using only confirmed visit
 
 | Payroll part | Week start | Week end | Wages | Result | Paragraph | Ride dates (inside rule only) |
 | --- | --- | --- | --- | --- | --- | --- |
-| SH-E06 | audit period | audit period | 71250.45 | OPEN | OPEN | — |
-
-| Proposal subject | Candidate code | Wage basis | Approval |
-| --- | --- | --- | --- |
-| SH-E06 | C-110 | 71250.45 | UNAPPROVED; excluded from CSV |
+| SH-E06 | audit period | audit period | 71250.45 | C-110 | CG-04 | — |
 
 Supporting source IDs (local to this employer; exact locators below): S0001, S0002, S0003, S0004, S0005, S0006, S0007, S0008, S0009, S0010, S0011, S0012, S0013, S0014, S0015, S0016, S0017, S0018, S0019, S0020, S0021, S0022, S0023, S0024, S0025, S0026, S0027, S0028, S0050, S0051.
 
@@ -5483,7 +5470,7 @@ Required evidence and approval: employer payroll/records contact confirms the li
 
 Verified base-wage allocation: H-420 $59840.70. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-Between 11 confirmed and 12 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
+Between 11 confirmed and 11 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
 
 Confirmed distinct site-visit dates: 2025-09-17, 2025-09-19, 2025-10-02, 2025-10-17, 2025-11-14, 2026-01-08, 2026-01-14, 2026-01-16, 2026-03-04, 2026-06-16, 2026-06-23. Unattributed rows remain unassigned; confirm completeness separately.
 
@@ -5505,7 +5492,7 @@ Required evidence and approval: employer payroll/records contact confirms the li
 
 Verified base-wage allocation: C-110 $46118.25. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-Between 0 confirmed and 1 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.
+Between 0 confirmed and 0 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.
 
 Confirmed distinct site-visit dates: none recorded. Unattributed rows remain unassigned; confirm completeness separately.
 
@@ -5616,15 +5603,15 @@ Employee assignments are not explicitly listed on the application. A unique exac
 
 | Code | Reported payroll | Verified CSV payroll | Difference (verified minus reported) |
 | --- | --- | --- | --- |
-| C-110 | 177209.40 | 46118.25 | -131091.15 |
+| C-110 | 177209.40 | 117368.70 | -59840.70 |
 | H-420 | 284670.30 | 369204.39 | 84534.09 |
 
 | Control | Reconciled | Original basis | Unresolved amount |
 | --- | --- | --- | --- |
-| allocation | True | 461879.70 | 71250.45 |
-| independent | True | 461879.70 | 71250.45 |
+| allocation | True | 461879.70 | 0.00 |
+| independent | True | 461879.70 | 0.00 |
 | adjustments | True | 152117.05 | 45945.65 |
-| combined | True | 461879.70 | 71250.45 |
+| combined | True | 461879.70 | 0.00 |
 
 Supporting source IDs (local to this employer; exact locators below): S0050, S0051.
 
@@ -5662,15 +5649,11 @@ Supporting source IDs (local to this employer; exact locators below): S0054, S00
 
 Required evidence and approval: employer payroll/records contact confirms the linked original records and facts; the auditor resolves policy and any OPEN/proposed treatment. See the linked question for the specific unanswered prompts.
 
-#### E06-Q016 — Unattributed site sign-ins
+#### E06-Q016 — External site visitors
 
 **OPEN / HUMAN CONFIRMATION REQUIRED**. Follow-up: [E06-Q016](audit-questions.md#e06-q016).
 
-No employee identity is assumed for unmatched sign-ins; dates provide possible-visit bounds only.
-
-| Original source record | Date | Original employee ID | Original name | Site |
-| --- | --- | --- | --- | --- |
-| site-signin-log.csv:8 | 2025-12-02 | BLANK / UNATTRIBUTED | County inspector | Lot 7 Mill Pond Rd |
+The source explicitly records external governmental inspectors with no employee ID or matching payroll name; their visits are excluded from employee site-day bounds, with the original records retained.
 
 Supporting source IDs (local to this employer; exact locators below): S0020.
 

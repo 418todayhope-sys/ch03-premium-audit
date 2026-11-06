@@ -186,6 +186,21 @@ def _adjustment_evidence(document):
     return bool(monetary_columns or re.search(r"subcontract|certificate|travel|allowance", document.path.stem, re.I))
 
 
+def _homebuilding_business(document):
+    """Recognize affirmative residential construction, without deciding payroll."""
+    if document is None:
+        return False
+    activity = r"\b(?:builds|constructs) (?:single[- ]family|detached(?: family)?) (?:houses|homes|dwellings)\b"
+    found = False
+    for sentence in re.split(r"[.!?]", " ".join(document.text.casefold().split())):
+        for match in re.finditer(activity, sentence):
+            if (re.search(r"\b(?:unclear|uncertain|unsure|unconfirmed|whether|possibly|perhaps|may|might|could)\b", sentence)
+                    or re.search(r"\b(?:no longer|not|never|doesn't|clients?|customers?|suppliers?)\b", sentence[:match.start()])):
+                return False
+            found = True
+    return found
+
+
 def _pending(reason, sources=(), rule_sources=()):
     return Decision("employer_evidence", "OPEN", None, None, reason,
                     (f"Auditor or employer must confirm: {reason}",),
@@ -271,6 +286,40 @@ def _direct_restaurant(evaluator, evidence):
                     ("restaurant employer", "corroborated restaurant kitchen/dining duties", "whole audit-period register"), "whole_audit_period")
 
 
+def _restaurant_duty_exceptions(employee, register, business, notes):
+    """Retain unmapped individual/role observations instead of trusting a title.
+
+    Only complete, simple meal-preparation/service statements are recognized.
+    Additional tasks or unknown wording require review, not a guessed trade.
+    """
+    identity = "|".join(re.escape(value.casefold()) for value in (employee.name, employee.employee_id))
+    identities = {person.employee_id: re.compile(r"\b(?:" + "|".join(
+        re.escape(value.casefold()) for value in (person.name, person.employee_id)) + r")\b") for person in register}
+    role = str(employee.raw_record.values.get("position", "")).casefold()
+    family = (r"(?:(?:line|prep) )?cooks?" if "cook" in role else
+              r"(?:sous )?chefs?" if "chef" in role else re.escape(role) + "s?")
+    subject = re.compile(r"\b(?:" + identity + "|" + family + r")\b")
+    roles = r"(?:sous )?chefs?|(?:(?:line|prep) )?cooks?|servers?|hosts?|dishwashers?|workers?"
+    actor = r"(?:the |our )?(?:" + roles + r"|" + identity + r")(?:,\s*(?:" + identity + r"),)?"
+    location = r"(?: (?:in|at|to|for) (?:the )?(?:restaurant(?: kitchen)?|kitchen|dining room|customers|guests))?"
+    food_verb = r"(?:prepares?|cooks?|serves?)"
+    task = (r"(?:" + food_verb + r"(?: and " + food_verb + r")? (?:food|meals|customers|guests)|"
+            r"waits?(?: on)? tables|wash(?:es)? dishes)" + location)
+    supported = re.compile(actor + " " + task + r"(?: and (?:" + actor + " )?" + task + ")*")
+    refs = []
+    for document in (business, notes):
+        if document is None:
+            continue
+        for match in re.finditer(r"[^.!?\n]+[.!?]?", document.text):
+            text = " ".join(match.group().casefold().strip().rstrip(".!?").split())
+            named = {key for key, pattern in identities.items() if pattern.search(text)}
+            if named and employee.employee_id not in named:
+                continue
+            if subject.search(text) and not supported.fullmatch(text):
+                refs.append(_reference(document, match.start(), match.end(), "unmapped individual/role duty observation"))
+    return tuple(refs)
+
+
 def _application(document, register, allocation, by_code, adjustment_open, issues):
     if document is None:
         return None
@@ -343,7 +392,7 @@ def process_employer(
     application = get(files.application, MarkdownSource)
     legal_office = bool(business and re.search(r"\bis (?:an? )?(?:[a-z0-9-]+ )?law office\b", " ".join(business.text.lower().split())))
     contractor = bool(business and re.search(r"\b(?:replaces roofs|(?:installs|performs) (?:roofing|siding)|roofing and siding contractor)\b", " ".join(business.text.lower().split())))
-    homebuilding = bool(business and re.search(r"\bbuilds single-family houses\b", " ".join(business.text.lower().split())))
+    homebuilding = _homebuilding_business(business)
     courier = bool(business and re.search(r"\bruns same-day document and parcel delivery\b", " ".join(business.text.lower().split())))
     electrical = bool(business and re.search(r"\bdoes residential and light commercial wiring\b", " ".join(business.text.lower().split())))
     receipt_table = None if legal_office or contractor or homebuilding or courier or electrical else get(files.receipts, CSVSource)
@@ -464,10 +513,15 @@ def process_employer(
     decisions = {}
     proposals = {}
     for employee, row in zip(register, payroll.rows):
-        evidence = (employee.source, *context_refs)
         position = str(row.values.get("position", ""))
+        direct_role = bool(_RESTAURANT_POSITION.fullmatch(position))
+        duty_refs = _restaurant_duty_exceptions(employee, register, business, notes) if restaurant and direct_role else ()
+        evidence = (employee.source, *context_refs, *duty_refs)
         if period is None or not restaurant or business is None or notes is None or context_conflict:
             decision = _pending("Confirm this employee's actual duties, restaurant industry and exact audit period; this adapter has no rule for other contexts.", evidence)
+        elif duty_refs:
+            decision = _pending("Individual/role duty observations contain additional tasks or unsupported wording; confirm actual duties before using the restaurant title. No alternative work code is inferred.",
+                                evidence, _guide_refs(evaluator, ("CG-02", "CG-41"))[0])
         elif _CATERING_POSITION.match(position):
             facts = RuleFacts(employee.employee_id, "restaurant", "catering_crew", period.start, period.end,
                               complete=bool(receipts and receipts.coverage_confirmed),
@@ -498,6 +552,18 @@ def process_employer(
             decision = _pending("Register title and supplied observations do not establish supported actual duties; obtain employee duty evidence or an applicable rule.", evidence)
         decisions[employee.employee_id] = decision
         if decision.status == "OPEN":
+            if restaurant and direct_role and (duty_refs or notes is None or not dining_observed):
+                refs, valid = _guide_refs(evaluator, ("CG-02", "CG-41"))
+                if valid:
+                    confirmations = (
+                        f"Employer must confirm {employee.name} [{employee.employee_id}]'s actual duties, resolve the cited observations, and provide complete duty/time records for the audit period.",
+                        "The assigned auditor must review the evidence and approve the applicable classification or division of payroll. A register title is insufficient; no alternative work code is assumed.",
+                    )
+                    proposals[employee.employee_id] = ClassificationProposal(None, None, employee.wages,
+                        "Propose retaining the full wage basis OPEN and unclassified pending duty evidence and auditor approval. Use F-710 only after the conflicting or missing evidence is resolved and meal-preparation/service duties are established; this proposal authorizes no allocation.",
+                        confirmations, refs, evidence)
+                    decision = replace(decision, required_confirmation=confirmations)
+                    decisions[employee.employee_id] = decision
             issues.append(OpenItem(f"{employee.name} [{employee.employee_id}]", decision.reason, "; ".join(decision.required_confirmation), decision.evidence_sources + decision.rule_sources, proposals.get(employee.employee_id)))
     return _finish(inputs, payroll, period, receipts, register, decisions, issues, application, interview, interview_errors, proposals=proposals)
 

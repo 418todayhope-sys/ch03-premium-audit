@@ -249,7 +249,7 @@ class LocalUnifiedPreviewTest(unittest.TestCase):
             "larkspur-lane-bistro": ({"F-710": "226431.55"}, "114293.80", None),
             "harbor-point-legal": ({"C-110": "360935.68"}, "64212.48", None),
             "bay-crest-exteriors": ({"C-110": "44812.35", "R-310": "450480.60", "R-320": "46205.10"}, "0.00", None),
-            "severn-homebuilders": ({"C-110": "46118.25", "H-420": "369204.39"}, "71250.45", "45945.65"),
+            "severn-homebuilders": ({"C-110": "117368.70", "H-420": "369204.39"}, "0.00", "45945.65"),
             "annapolis-courier": ({"C-110": "107820.45", "T-610": "176694.95"}, "0.00", None),
             "patuxent-electric": ({"C-110": "43905.60", "E-510": "426184.85"}, "0.00", "390.00"),
         }

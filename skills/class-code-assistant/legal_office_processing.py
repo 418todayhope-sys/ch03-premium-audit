@@ -22,8 +22,10 @@ _GUIDE_WORDING = {
     "CG-02": "**CG-02. Assigning codes.** An employer is assigned the class code that describes its principal business. An employee whose work is described by another code in this guide is reported under that code. An employer may carry several codes.",
     "CG-04": "**CG-04. C-110 Clerical office employees.** Employees whose duties are confined to an office: correspondence, bookkeeping, dispatching by telephone or radio, drafting and estimating at a desk, and professional staff who work in the office.",
 }
-_NO_PHYSICAL_WORK = "no one on staff does physical work outside the office"
-_PHYSICAL_ABSENCE_STATEMENT = re.compile(r"(?:^|[.!?]\s+)" + re.escape(_NO_PHYSICAL_WORK) + r"[.!?]")
+_PHYSICAL_ABSENCE_STATEMENT = re.compile(
+    r"(?:^|(?<=[.!?])\s+)no (?:one on staff|employee|staff member) "
+    r"(?:does|performs) physical work outside the office\."
+)
 
 
 def _row_references(table):

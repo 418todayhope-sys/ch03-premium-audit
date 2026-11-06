@@ -8266,9 +8266,9 @@ Each cited source and each relied-upon CSV data row has at least one confirmatio
 <a id="e06"></a>
 ## Severn Homebuilders (severn-homebuilders)
 
-Verified CSV payroll: $415322.64. OPEN wages: $71250.45. OPEN adjustment basis: $45945.65. Proposed amounts are excluded from these verified CSV totals.
+Verified CSV payroll: $486573.09. OPEN wages: $0.00. OPEN adjustment basis: $45945.65. Proposed amounts are excluded from these verified CSV totals.
 
-CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; SHA-256 4dd5979377d949d81c05d6f7d46eaa78832702aa47721312b61932691d6549f5. Questions: 16. Uncovered obligations: 0.
+CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; SHA-256 e437c6c7360972513326d02efa546efb74f9d920f000eed00ba82c1520d63141. Questions: 16. Uncovered obligations: 0.
 
 <a id="e06-q001"></a>
 ### E06-Q001 — Garrett Holm [SH-E01]
@@ -8368,25 +8368,19 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 <a id="e06-q006"></a>
 ### E06-Q006 — Marissa Gale [SH-E06]
 
-**OPEN / HUMAN APPROVAL REQUIRED**
+**VERIFIED CALCULATION / EMPLOYER CONFIRMATION**
 
 - **Confirm:** Confirm Marissa Gale [SH-E06]'s actual duties, original register wages $71250.45, and every listed payroll part or pay week against the cited employer records. Identify any missing work, visit, ride or wage records and any incorrect identity.
 
-- **Confirm:** Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
-
-- **Confirm:** Confirm the employee-level application assignment C-110 (inferred from counts/wages, not explicitly listed), and the calculated result OPEN for $71250.45; status OPEN.
+- **Confirm:** Confirm the employee-level application assignment C-110 (inferred from counts/wages, not explicitly listed), and the calculated result C-110 for $71250.45; status UNCHANGED.
 
 - **Confirm:** For each listed unattributed sign-in, identify whether it belongs to Marissa Gale [SH-E06], another employee, or a nonpayroll visitor. The original blank/unmatched identity is preserved; no visit is attributed to this employee without confirmation.
 
-**Why it matters:** Verified base-wage allocation: none. OPEN base wages: $71250.45; OPEN wages are excluded from CSV totals.
+**Why it matters:** Verified base-wage allocation: C-110 $71250.45. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-**Why it matters:** Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
+**Why it matters:** Between 4 confirmed and 4 possible distinct site days; both bounds return C-110. 4 distinct job-site days is at most four in the audit period.
 
 **Why it matters:** Confirmed distinct site-visit dates: 2025-07-24, 2026-01-16, 2026-03-24, 2026-04-21. Unattributed rows remain unassigned; confirm completeness separately.
-
-**Why it matters:** UNAPPROVED alternatives from the cited office-visit rule: candidate C-110 using only 4 confirmed dates; governing field code H-420 only if human confirmation establishes the additional visit evidence (up to 5 distinct dates) and the rule applies. Both the identity and resulting treatment require approval; the unmatched record is not attributed.
-
-**Why it matters:** UNAPPROVED PROPOSAL for SH-E06: Conditional treatment using only confirmed visits, pending identity/completeness confirmation; not a verified allocation.
 
 **Source documents:** application.md; business-description.md; ch03-premium-audit-20261105-0222(1).md; classification-guide.md; field-notes.md; payroll-register.csv; site-signin-log.csv; subcontractor-payments.csv. Exact locators and row identities are indexed below under this question ID.
 
@@ -8396,11 +8390,7 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 
 | Payroll part | Week start | Week end | Wages | Result | Paragraph | Ride dates (inside rule only) |
 | --- | --- | --- | --- | --- | --- | --- |
-| SH-E06 | audit period | audit period | 71250.45 | OPEN | OPEN | — |
-
-| Proposal subject | Candidate code | Wage basis | Approval |
-| --- | --- | --- | --- |
-| SH-E06 | C-110 | 71250.45 | UNAPPROVED; excluded from CSV |
+| SH-E06 | audit period | audit period | 71250.45 | C-110 | CG-04 | — |
 
 <a id="e06-q007"></a>
 ### E06-Q007 — Dana Whitcomb [SH-E07]
@@ -8415,7 +8405,7 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 
 **Why it matters:** Verified base-wage allocation: H-420 $59840.70. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-**Why it matters:** Between 11 confirmed and 12 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
+**Why it matters:** Between 11 confirmed and 11 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.
 
 **Why it matters:** Confirmed distinct site-visit dates: 2025-09-17, 2025-09-19, 2025-10-02, 2025-10-17, 2025-11-14, 2026-01-08, 2026-01-14, 2026-01-16, 2026-03-04, 2026-06-16, 2026-06-23. Unattributed rows remain unassigned; confirm completeness separately.
 
@@ -8442,7 +8432,7 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 
 **Why it matters:** Verified base-wage allocation: C-110 $46118.25. OPEN base wages: $0.00; OPEN wages are excluded from CSV totals.
 
-**Why it matters:** Between 0 confirmed and 1 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.
+**Why it matters:** Between 0 confirmed and 0 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.
 
 **Why it matters:** Confirmed distinct site-visit dates: none recorded. Unattributed rows remain unassigned; confirm completeness separately.
 
@@ -8575,15 +8565,15 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 
 | Code | Reported payroll | Verified CSV payroll | Difference (verified minus reported) |
 | --- | --- | --- | --- |
-| C-110 | 177209.40 | 46118.25 | -131091.15 |
+| C-110 | 177209.40 | 117368.70 | -59840.70 |
 | H-420 | 284670.30 | 369204.39 | 84534.09 |
 
 | Control | Reconciled | Original basis | Unresolved amount |
 | --- | --- | --- | --- |
-| allocation | True | 461879.70 | 71250.45 |
-| independent | True | 461879.70 | 71250.45 |
+| allocation | True | 461879.70 | 0.00 |
+| independent | True | 461879.70 | 0.00 |
 | adjustments | True | 152117.05 | 45945.65 |
-| combined | True | 461879.70 | 71250.45 |
+| combined | True | 461879.70 | 0.00 |
 
 <a id="e06-q013"></a>
 ### E06-Q013 — Business, actual-duty observations and audit-period completeness
@@ -8623,19 +8613,15 @@ CSV: /home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv; S
 **Source documents:** business-description.md; classification-guide.md. Exact locators and row identities are indexed below under this question ID.
 
 <a id="e06-q016"></a>
-### E06-Q016 — Unattributed site sign-ins
+### E06-Q016 — External site visitors
 
 **OPEN / HUMAN CONFIRMATION REQUIRED**
 
-- **Confirm:** Confirm whether the unmatched entries are nonpayroll visitors and correct any missing employee identities.
+- **Confirm:** Confirm the cited inspectors were external nonpayroll visitors, the recorded roles are accurate, and the employee sign-in records are complete; correct any conflicting identity evidence.
 
-**Why it matters:** No employee identity is assumed for unmatched sign-ins; dates provide possible-visit bounds only.
+**Why it matters:** The source explicitly records external governmental inspectors with no employee ID or matching payroll name; their visits are excluded from employee site-day bounds, with the original records retained.
 
 **Source documents:** site-signin-log.csv. Exact locators and row identities are indexed below under this question ID.
-
-| Original source record | Date | Original employee ID | Original name | Site |
-| --- | --- | --- | --- | --- |
-| site-signin-log.csv:8 | 2025-12-02 | BLANK / UNATTRIBUTED | County inspector | Lot 7 Mill Pond Rd |
 
 <details>
 <summary>Evidence and record coverage index — 55 citations, 34 CSV records</summary>

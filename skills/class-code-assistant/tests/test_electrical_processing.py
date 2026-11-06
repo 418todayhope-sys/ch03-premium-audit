@@ -321,7 +321,7 @@ class LocalElectricalAndRegressionTests(unittest.TestCase):
             "larkspur-lane-bistro": {"F-710": Decimal("226431.55")},
             "harbor-point-legal": {"C-110": Decimal("360935.68")},
             "bay-crest-exteriors": {"C-110": Decimal("44812.35"), "R-310": Decimal("450480.60"), "R-320": Decimal("46205.10")},
-            "severn-homebuilders": {"C-110": Decimal("46118.25"), "H-420": Decimal("369204.39")},
+            "severn-homebuilders": {"C-110": Decimal("117368.70"), "H-420": Decimal("369204.39")},
             "annapolis-courier": {"C-110": Decimal("107820.45"), "T-610": Decimal("176694.95")},
         }
         for employer, codes in expected.items():

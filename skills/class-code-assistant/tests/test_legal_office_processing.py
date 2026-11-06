@@ -110,6 +110,110 @@ class LegalOfficeIntegrationTests(unittest.TestCase):
                 self.assertEqual(result.decisions["Z3"].status, "OPEN")
                 self.assertEqual(result.by_code, {"C-110": Decimal("393.12")})
 
+    def test_equivalent_absence_statements_support_unvisited_office_staff(self):
+        self.set_log(())
+        for subject in ("No one on staff", "No employee", "No staff member"):
+            for verb in ("does", "performs"):
+                with self.subTest(subject=subject, verb=verb):
+                    observation = f"{subject} {verb} physical work outside the office."
+                    (self.employer / "field-notes.md").write_text(NOTES.replace(
+                        "No one on staff does physical\nwork outside the office.", observation), encoding="utf-8")
+                    result = self.run_office()
+                    # Independent payroll control: 101.01+202.02+30.03+40.04+50.05.
+                    self.assertEqual(result.by_code, {"C-110": Decimal("423.15")})
+                    self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("0.00"))
+                    self.assertEqual(result.independent_reconciliation.register_total, Decimal("423.15"))
+                    self.assertTrue(result.independent_reconciliation.reconciled)
+                    self.assertFalse(result.proposals)
+                    for decision in result.decisions.values():
+                        self.assertEqual((decision.status, decision.class_code, decision.rationale_ref),
+                                         ("CLASSIFIED", "C-110", "CG-04"))
+                        self.assertEqual({ref.locator for ref in decision.rule_sources}, {"CG-02", "CG-04"})
+                        self.assertTrue(any(ref.source == str(self.employer / "field-notes.md")
+                                            and observation in ref.excerpt for ref in decision.evidence_sources))
+
+    def test_paraphrased_observations_preserve_legal_visit_boundaries(self):
+        (self.employer / "field-notes.md").write_text(NOTES.replace(
+            "No one on staff does physical\nwork outside the office.",
+            "No employee performs physical work outside the office."), encoding="utf-8")
+        for count in (0, 1, 4, 5, 6):
+            with self.subTest(days=count):
+                self.set_log(DATES[:count])
+                result = self.run_office()
+                decision = result.decisions["Z3"]
+                # Any logged site exception requires review, independently of
+                # the contractor's threshold; the remaining four wages = 393.12.
+                self.assertEqual(result.by_code, {"C-110": Decimal("393.12" if count else "423.15")})
+                self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("30.03" if count else "0.00"))
+                self.assertEqual(len(result.site_visits["Z3"]), count)
+                self.assertTrue(result.independent_reconciliation.reconciled)
+                if count:
+                    self.assertEqual((decision.status, decision.class_code), ("OPEN", None))
+                    self.assertIn("no verified application", decision.reason)
+                    self.assertTrue(any("09:06 PM" in ref.locator for ref in decision.rule_sources))
+                    self.assertEqual((result.proposals["Z3"].class_code, result.proposals["Z3"].wages),
+                                     ("C-110", Decimal("30.03")))
+                    self.assertTrue(result.proposals["Z3"].required_confirmation)
+                else:
+                    self.assertEqual((decision.status, decision.class_code), ("CLASSIFIED", "C-110"))
+
+    def test_qualified_absence_paraphrases_do_not_verify_office_duties(self):
+        self.set_log(())
+        for observation in (
+            "It has not been confirmed that no employee performs physical work outside the office.",
+            "No employee performs physical work outside the office, according to an unverified claim.",
+            "No employee performs physical work outside the office except one assistant.",
+            "No employee performs physical work outside the office?",
+            "If no employee performs physical work outside the office, classification can be reviewed.",
+            "Not every employee performs physical work outside the office.",
+            "No employee may perform physical work outside the office.",
+            "",  # Titles and an office suite do not supply missing duty evidence.
+        ):
+            with self.subTest(observation=observation):
+                (self.employer / "field-notes.md").write_text(NOTES.replace(
+                    "No one on staff does physical\nwork outside the office.", observation), encoding="utf-8")
+                result = self.run_office()
+                self.assertEqual(result.by_code, {})
+                self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("423.15"))
+                self.assertTrue(result.independent_reconciliation.reconciled)
+                for key, decision in result.decisions.items():
+                    self.assertEqual((decision.status, decision.class_code), ("OPEN", None))
+                    self.assertTrue(decision.required_confirmation)
+                    self.assertIsNone(result.proposals[key].class_code)
+
+    def test_positive_absence_paraphrase_cannot_hide_conflicting_duty_evidence(self):
+        self.set_log(())
+        base = NOTES.replace("No one on staff does physical\nwork outside the office.",
+                             "No employee performs physical work outside the office.")
+        for conflict in (
+            "Example First performs physical work outside the office.",
+            "Some employees perform physical work outside the office.",
+            "Example Fourth performs roofing work at construction sites.",
+            "It has not been confirmed that no staff member does physical work outside the office.",
+        ):
+            with self.subTest(conflict=conflict):
+                (self.employer / "field-notes.md").write_text(base + conflict + "\n", encoding="utf-8")
+                result = self.run_office()
+                self.assertEqual(result.by_code, {})
+                self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("423.15"))
+                self.assertTrue(result.independent_reconciliation.reconciled)
+                for key, decision in result.decisions.items():
+                    self.assertEqual((decision.status, decision.class_code), ("OPEN", None))
+                    self.assertTrue(decision.required_confirmation)
+                    self.assertIsNone(result.proposals[key].class_code)
+                    self.assertTrue(any(conflict in ref.excerpt for ref in decision.evidence_sources))
+
+    def test_adjacent_equivalent_absence_sentences_are_both_recognized(self):
+        self.set_log(())
+        observation = ("No employee performs physical work outside the office. "
+                       "No one on staff does physical work outside the office.")
+        (self.employer / "field-notes.md").write_text(NOTES.replace(
+            "No one on staff does physical\nwork outside the office.", observation), encoding="utf-8")
+        result = self.run_office()
+        self.assertEqual(result.by_code, {"C-110": Decimal("423.15")})
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("0.00"))
+        self.assertTrue(result.independent_reconciliation.reconciled)
+
     def test_duplicate_signins_count_distinct_dates_and_preserve_both_source_rows(self):
         self.set_log((*DATES, DATES[0]))
         result = self.run_office()

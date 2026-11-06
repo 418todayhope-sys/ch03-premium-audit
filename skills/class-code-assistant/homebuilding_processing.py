@@ -101,6 +101,8 @@ def _iso_day(value):
 def _related_name(left, right):
     # Candidate retrieval ONLY: the adjustment evaluator still sees both original
     # different names and returns OPEN. This is never an identity/coverage match.
+    if left.casefold() == right.casefold():
+        return left != right
     left, right = left.casefold(), right.casefold()
     first, second = re.findall(r"[a-z0-9]+", left), re.findall(r"[a-z0-9]+", right)
     shared_leading_name = len(first) >= 2 and len(second) >= 2 and first[:2] == second[:2]
@@ -164,6 +166,21 @@ def _subcontractors(payments, inventory, notes, period, paragraphs, evaluator, a
     return result, consumed, tuple(cases)
 
 
+def _estimator_measurement_visits(note_text):
+    """Recognize stated measurement visits, leaving other duty prose for review."""
+    frequency = r"(?:occasionally|sometimes|periodically|now and then)"
+    site = r"(?:(?:a|the) )?(?:(?:building|job|construction)[ -])?sites?"
+    purpose = r"(?:to (?:measure|take measurements)|for measurements)"
+    visit = (rf"(?:the )?estimator (?:{frequency} )?"
+             rf"(?:visits|travels to|goes to) {site}(?: {frequency})?")
+    observation = rf"(?:{purpose},? {visit}|{visit} {purpose})"
+    statements = [sentence.strip() for sentence in re.split(r"[.!?]", note_text)
+                  if re.search(r"\bestimator\b", sentence)]
+    # A positive clause cannot override another unsupported/uncertain duty
+    # statement. Full matches also reject negation, attribution and extra tasks.
+    return bool(statements) and all(re.fullmatch(observation, sentence) for sentence in statements)
+
+
 def evaluate_homebuilding(inputs, business, notes, log, payroll, register, period, evaluator,
                          payments, inventory, interview, interview_errors, files):
     issues = []
@@ -201,7 +218,7 @@ def evaluate_homebuilding(inputs, business, notes, log, payroll, register, perio
     for key, role in roles.items():
         if role in {"lead carpenter", "carpenter", "laborer"}:
             field.add(key)
-        elif role == "estimator" and counts[role] == 1 and re.search(r"\bthe estimator visits a site now and then to measure\.", note_text):
+        elif role == "estimator" and counts[role] == 1 and _estimator_measurement_visits(note_text):
             office.add(key)
         elif role == "bookkeeper" and counts[role] == 1 and re.search(r"\bthe bookkeeper stays in the office\.", note_text):
             office.add(key)
@@ -236,6 +253,8 @@ def evaluate_homebuilding(inputs, business, notes, log, payroll, register, perio
     visit_errors = {key: [] for key in employees}
     log_errors = []
     unassigned = []
+    external = []
+    unidentified = []
     possible_days = set()
     valid_log = log is not None and set(log.columns) == {"date", "employee_id", "name", "site", "signed_in_at"}
     if not valid_log or not log.rows:
@@ -245,6 +264,23 @@ def evaluate_homebuilding(inputs, business, notes, log, payroll, register, perio
             key = row.values["employee_id"]
             if key not in employees:
                 unassigned.append(ref)
+                name = " ".join(row.values["name"].casefold().split())
+                # An explicit governmental inspector role is external evidence,
+                # not an unidentified employee. An ID or a matching register
+                # name prevents this exclusion; preserve such ambiguity below.
+                external_role = re.fullmatch(r"(?:county|city|municipal|state) (?:building )?inspector", name)
+                # Additional visitor/date prose may contradict the role label;
+                # interpreting it requires review, not an assumed identity.
+                discussed = re.search(r"\b(?:inspector|visitor)\b", prose) or (
+                    row.values["date"] and row.values["date"] in prose)
+                if external_role and discussed:
+                    log_errors.append("An inspector label is also discussed in employer prose; confirm identity and resolve that additional evidence before excluding any employee visits.")
+                elif not key.strip() and external_role and not any(
+                    name == " ".join(employee.name.casefold().split()) for employee in register
+                ):
+                    external.append(ref)
+                    continue
+                unidentified.append(ref)
                 try:
                     possible_days.add(_day(row.values["date"], period))
                 except (ValueError, TypeError):
@@ -261,9 +297,12 @@ def evaluate_homebuilding(inputs, business, notes, log, payroll, register, perio
                     visits[key].add(day)
             except (ValueError, TypeError):
                 visit_errors[key].append("A site record has invalid date/site details or falls outside the audit period.")
-    if unassigned:
+    if external:
+        issues.append(OpenItem("External site visitors", "The source explicitly records external governmental inspectors with no employee ID or matching payroll name; their visits are excluded from employee site-day bounds, with the original records retained.",
+            "Confirm the cited inspectors were external nonpayroll visitors, the recorded roles are accurate, and the employee sign-in records are complete; correct any conflicting identity evidence.", tuple(external)))
+    if unidentified:
         issues.append(OpenItem("Unattributed site sign-ins", "No employee identity is assumed for unmatched sign-ins; dates provide possible-visit bounds only.",
-            "Confirm whether the unmatched entries are nonpayroll visitors and correct any missing employee identities.", tuple(unassigned)))
+            "Confirm whether the unmatched entries are nonpayroll visitors and correct any missing employee identities.", tuple(unidentified)))
     office_refs, office_guide = _verified_refs(paragraphs, ("CG-02", "CG-04"))
     proposals = {}
     for key in office:

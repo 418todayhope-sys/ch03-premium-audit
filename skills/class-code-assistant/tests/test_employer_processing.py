@@ -322,6 +322,140 @@ class EmployerProcessingTests(unittest.TestCase):
         self.assertFalse(result.application.definitive)
 
 
+class RestaurantDutySafeguardTests(unittest.TestCase):
+    """Individual work evidence must prevail over a restaurant register title."""
+
+    def setUp(self):
+        self.temp = tempfile.TemporaryDirectory()
+        self.addCleanup(self.temp.cleanup)
+        self.root = Path(self.temp.name)
+        self.employer = self.root / "willow-meal-house"
+        self.employer.mkdir()
+        self.guide = self.root / "guide.md"
+        self.interview = self.root / "interview.md"
+        self.guide.write_text(GUIDE, encoding="utf-8")
+        self.interview.write_text(INTERVIEW, encoding="utf-8")
+        for filename, content in {
+            "business-description.md": BUSINESS.replace("Completely Different Restaurant", "Willow Meal House"),
+            "field-notes.md": NOTES,
+            "payroll-register.csv": "employee_id,name,position,wages_paid\nDIN-C,Iris Stone,Line Cook,31.01\nDIN-S,Theo Moss,Server,42.02\nEVT-C,Nell Vale,Catering Lead,20.03\n",
+            "gross-receipts.csv": "month,dine_in_receipts,offsite_catering_receipts\n2025-01,60.00,40.00\n",
+            "application.md": "# Application\n| Class code (employer's choice) | Employees | Payroll (USD) |\n|---|---|---|\n| F-710 | 2 | 73.03 |\n| F-720 | 1 | 20.03 |\n",
+        }.items():
+            (self.employer / filename).write_text(content, encoding="utf-8")
+
+    def run_restaurant(self):
+        return importlib.import_module("employer_processing").process_employer(
+            self.guide, self.employer, self.interview)
+
+    def test_named_nonrestaurant_work_stays_open_with_unclassified_proposal_and_question(self):
+        note = "The server, Theo Moss, installs and repairs electrical wiring at customers' buildings every workday."
+        path = self.employer / "field-notes.md"
+        path.write_text(NOTES + note + "\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+        self.assertIsNone(result.decisions["DIN-S"].class_code)
+        self.assertEqual(result.by_code, {"F-710": Decimal("31.01"), "F-720": Decimal("20.03")})
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("42.02"))
+        proposal = result.proposals["DIN-S"]
+        self.assertEqual((proposal.class_code, proposal.rationale_ref, proposal.wages), (None, None, Decimal("42.02")))
+        self.assertTrue({"CG-02", "CG-41"} <= {ref.locator for ref in proposal.rule_sources})
+        self.assertTrue(any(ref.source == str(path) and note in ref.excerpt for ref in proposal.evidence_sources))
+        required = " ".join(proposal.required_confirmation)
+        self.assertTrue(all(term in required for term in ("Theo Moss", "DIN-S", "duties", "auditor")))
+        finding = next(item for item in result.open_items if "[DIN-S]" in item.subject)
+        self.assertEqual(finding.proposed_treatment, proposal)
+        self.assertTrue(finding.required_confirmation)
+        self.assertNotIn("E-510", result.by_code)
+        self.assertTrue(result.independent_reconciliation.reconciled)
+
+    def test_paraphrased_nonrestaurant_work_does_not_require_a_trade_keyword(self):
+        for statement in (
+            "Theo Moss spends every weekday connecting circuits in houses.",
+            "The server pulls cable through building walls and fits power outlets.",
+            "DIN-S maintains refrigeration equipment for other businesses.",
+        ):
+            with self.subTest(statement=statement):
+                (self.employer / "field-notes.md").write_text(NOTES + statement + "\n", encoding="utf-8")
+                result = self.run_restaurant()
+                self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+                self.assertIsNone(result.proposals["DIN-S"].class_code)
+                self.assertEqual(result.by_code, {"F-710": Decimal("31.01"), "F-720": Decimal("20.03")})
+
+    def test_individual_duty_conflict_in_business_description_requires_review(self):
+        (self.employer / "business-description.md").write_text(
+            BUSINESS + "Theo Moss connects circuits in houses each day.\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+        self.assertEqual(result.by_code, {"F-710": Decimal("31.01"), "F-720": Decimal("20.03")})
+        self.assertTrue(any(ref.source.endswith("business-description.md") for ref in result.proposals["DIN-S"].evidence_sources))
+
+    def test_supported_food_duty_paraphrases_preserve_restaurant_and_catering(self):
+        for statement in (
+            "The server, Theo Moss, serves meals in the dining room.",
+            "Theo Moss prepares and serves meals in the dining room.",
+            "Workers cook meals in the kitchen and wait tables in the dining room.",
+            "Cooks prepare meals and servers serve customers.",
+        ):
+            for dine, catering, expected in (("60.00", "40.00", {"F-710": Decimal("73.03"), "F-720": Decimal("20.03")}),
+                                             ("60.01", "39.99", {"F-710": Decimal("93.06")})):
+                with self.subTest(statement=statement, catering=catering):
+                    (self.employer / "field-notes.md").write_text(NOTES + statement + "\n", encoding="utf-8")
+                    (self.employer / "gross-receipts.csv").write_text(
+                        f"month,dine_in_receipts,offsite_catering_receipts\n2025-01,{dine},{catering}\n", encoding="utf-8")
+                    result = self.run_restaurant()
+                    self.assertEqual(result.by_code, expected)
+                    self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("0.00"))
+                    self.assertNotIn("DIN-S", result.proposals)
+
+    def test_food_duties_do_not_mask_a_conflicting_clause_in_the_same_sentence(self):
+        (self.employer / "field-notes.md").write_text(
+            NOTES + "Theo Moss serves meals in the dining room and connects circuits in houses.\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("42.02"))
+        self.assertIsNone(result.proposals["DIN-S"].class_code)
+
+    def test_named_conflict_does_not_block_a_different_worker_with_the_same_title(self):
+        path = self.employer / "payroll-register.csv"
+        path.write_text(path.read_text() + "DIN-T,Uma Birch,Server,15.04\n", encoding="utf-8")
+        (self.employer / "field-notes.md").write_text(
+            NOTES + "The server, Theo Moss, connects circuits in houses.\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+        self.assertEqual(result.decisions["DIN-T"].class_code, "F-710")
+        self.assertEqual(result.by_code, {"F-710": Decimal("46.05"), "F-720": Decimal("20.03")})
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("42.02"))
+        self.assertNotIn("DIN-T", result.proposals)
+
+    def test_missing_duty_notes_require_unclassified_review_proposal(self):
+        (self.employer / "field-notes.md").unlink()
+        result = self.run_restaurant()
+        self.assertEqual(result.by_code, {})
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("93.06"))
+        self.assertIn("DIN-S", result.proposals)
+        self.assertIsNone(result.proposals["DIN-S"].class_code)
+        self.assertTrue(result.proposals["DIN-S"].required_confirmation)
+        self.assertTrue(result.independent_reconciliation.reconciled)
+
+    def test_unconfirmed_individual_duties_cannot_use_the_register_title(self):
+        (self.employer / "field-notes.md").write_text(
+            NOTES + "The server's duties have not been confirmed.\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.decisions["DIN-S"].status, "OPEN")
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("42.02"))
+        self.assertIsNone(result.proposals["DIN-S"].class_code)
+
+    def test_missing_kitchen_observations_do_not_establish_restaurant_work(self):
+        (self.employer / "field-notes.md").write_text("# Observations\nNo duties were observed.\n", encoding="utf-8")
+        result = self.run_restaurant()
+        self.assertEqual(result.by_code, {})
+        self.assertEqual(result.independent_reconciliation.unresolved_total, Decimal("93.06"))
+        self.assertIn("DIN-S", result.proposals)
+        self.assertIsNone(result.proposals["DIN-S"].class_code)
+        self.assertTrue(result.proposals["DIN-S"].required_confirmation)
+
+
 class LocalLarkspurIntegrationTest(unittest.TestCase):
     def test_actual_sources_allocate_only_evidenced_payroll_and_reconcile(self):
         self.assertTrue((COMPONENT / "employer_processing.py").is_file(), "Reusable employer workflow is not implemented")

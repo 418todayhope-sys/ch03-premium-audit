@@ -15,6 +15,7 @@ from test_electrical_processing import APPLICATION, BUSINESS, GUIDE, INTERVIEW, 
 from employer_processing import process_employer
 from generate_codes import generate_csvs
 from input_reader import read_markdown
+from real_audit_support import fresh_real_chain, source_rows
 
 COMPONENT = Path(__file__).resolve().parents[1]
 CLI = COMPONENT / "audit_questions.py"
@@ -252,16 +253,9 @@ class AuditQuestionTests(unittest.TestCase):
 class RealAuditQuestionCoverageTests(unittest.TestCase):
     def test_all_six_real_employers_and_named_exceptions_have_traceable_coverage(self):
         self.assertTrue(CLI.is_file(), "Reusable audit-question generator is missing")
-        module = importlib.import_module("audit_questions")
-        repo = COMPONENT.parents[1]
-        review, codes = repo / "deliverables/classification-review.json", repo / "deliverables/codes"
-        if not review.is_file() or not Path('/home/maxg/insurance01-inputs').is_dir():
-            self.skipTest("Read-only development evidence is unavailable")
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / "questions.md"
-            report = module.generate_questions(review, codes_dir=codes, output=output)
-            text = output.read_text(encoding="utf-8")
-        state = json.loads(review.read_text())
+        chain = fresh_real_chain(self.addCleanup)
+        report, state = chain.question_result, chain.state
+        text = chain.questions.read_text(encoding="utf-8")
         self.assertEqual(set(report["counts"]), {e["employer"] for e in state["processing"]["employers"]})
         self.assertEqual(report["uncovered"], {})
         self.assertEqual([p["employer"] for p in report["priorities"]],
@@ -275,8 +269,14 @@ class RealAuditQuestionCoverageTests(unittest.TestCase):
         self.assertIn("390.00", text)
         marissa = re.search(r"### E\d+-Q\d+ — Marissa Gale \[SH-E06\]\n(.*?)(?=\n### |\n<details>)", text, re.S)
         self.assertIsNotNone(marissa)
-        for token in ("2025-12-02", "County inspector", "Lot 7 Mill Pond Rd", "C-110", "H-420"):
+        for token in ("2025-12-02", "County inspector", "Lot 7 Mill Pond Rd", "C-110", "CG-04"):
             self.assertIn(token, marissa.group(1))
+        original = source_rows(chain.inputs / "employer-files/severn-homebuilders/payroll-register.csv")
+        estimator = next(r for r in original if r["position"] == "Estimator")
+        self.assertIn("**VERIFIED CALCULATION / EMPLOYER CONFIRMATION**", marissa.group(1))
+        self.assertIn(f"| {estimator['employee_id']} | audit period | audit period | {estimator['wages_paid']} | C-110 | CG-04 |", marissa.group(1))
+        self.assertNotIn("UNAPPROVED alternatives", marissa.group(1))
+        self.assertIn("External site visitors", text)
         for entry in state["processing"]["employers"]:
             self.assertGreater(report["counts"][entry["employer"]], len(entry["employee_payroll"]))
             for employee in entry["employee_payroll"]:

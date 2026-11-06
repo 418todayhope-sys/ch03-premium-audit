@@ -62616,10 +62616,10 @@
           "end": "2026-07-05"
         },
         "verified_by_code": {
-          "C-110": "46118.25",
+          "C-110": "117368.70",
           "H-420": "369204.39"
         },
-        "open_wages": "71250.45",
+        "open_wages": "0.00",
         "open_adjustment_basis": "45945.65",
         "employee_payroll": [
           {
@@ -62867,28 +62867,30 @@
             "name": "Marissa Gale",
             "register_wages": "71250.45",
             "source": "S0010",
-            "verified_wages_by_code": {},
+            "verified_wages_by_code": {
+              "C-110": "71250.45"
+            },
             "verified_adjustment_by_code": {},
-            "verified_by_code": {},
-            "open_wages": "71250.45",
+            "verified_by_code": {
+              "C-110": "71250.45"
+            },
+            "open_wages": "0.00",
             "parts": [
               {
                 "part_id": "SH-E06",
                 "wages": "71250.45",
-                "status": "OPEN",
-                "class_code": null,
-                "rationale_ref": null,
+                "status": "ALLOCATED",
+                "class_code": "C-110",
+                "rationale_ref": "CG-04",
                 "source": "S0010",
                 "scope": "whole_audit_period",
                 "decision": {
-                  "rule": "employer_evidence",
-                  "status": "OPEN",
-                  "class_code": null,
-                  "rationale_ref": null,
-                  "reason": "Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.",
-                  "required_confirmation": [
-                    "Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period."
-                  ],
+                  "rule": "contractor_office_visits",
+                  "status": "CLASSIFIED",
+                  "class_code": "C-110",
+                  "rationale_ref": "CG-04",
+                  "reason": "Between 4 confirmed and 4 possible distinct site days; both bounds return C-110. 4 distinct job-site days is at most four in the audit period.",
+                  "required_confirmation": [],
                   "rule_sources": [
                     "S0002",
                     "S0011",
@@ -62922,13 +62924,14 @@
                     "S0028"
                   ],
                   "applicability": [
-                    "documented actual duties and audit period"
+                    "contractor employer",
+                    "office employee by actual duties",
+                    "complete audit-period site sign-in evidence",
+                    "five or more days requires an evidenced unique governing field code"
                   ],
                   "scope": "whole_audit_period"
                 },
-                "required_confirmation": [
-                  "Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period."
-                ]
+                "required_confirmation": []
               }
             ]
           },
@@ -62959,7 +62962,7 @@
                   "status": "CLASSIFIED",
                   "class_code": "H-420",
                   "rationale_ref": "CG-15",
-                  "reason": "Between 11 confirmed and 12 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.",
+                  "reason": "Between 11 confirmed and 11 possible distinct site days; both bounds return H-420. 11 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.",
                   "required_confirmation": [],
                   "rule_sources": [
                     "S0002",
@@ -63039,7 +63042,7 @@
                   "status": "CLASSIFIED",
                   "class_code": "C-110",
                   "rationale_ref": "CG-04",
-                  "reason": "Between 0 confirmed and 1 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.",
+                  "reason": "Between 0 confirmed and 0 possible distinct site days; both bounds return C-110. 0 distinct job-site days is at most four in the audit period.",
                   "required_confirmation": [],
                   "rule_sources": [
                     "S0002",
@@ -63083,50 +63086,6 @@
           }
         ],
         "proposals": [
-          {
-            "kind": "classification",
-            "subject": "SH-E06",
-            "treatment": {
-              "class_code": "C-110",
-              "rationale_ref": "CG-04",
-              "wages": "71250.45",
-              "reason": "Conditional treatment using only confirmed visits, pending identity/completeness confirmation; not a verified allocation.",
-              "required_confirmation": [
-                "Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period."
-              ],
-              "rule_sources": [
-                "S0002",
-                "S0011",
-                "S0012",
-                "S0013",
-                "S0014"
-              ],
-              "evidence_sources": [
-                "S0010",
-                "S0004",
-                "S0005",
-                "S0015",
-                "S0016",
-                "S0017",
-                "S0018",
-                "S0019",
-                "S0020",
-                "S0001",
-                "S0006",
-                "S0007",
-                "S0008",
-                "S0009",
-                "S0021",
-                "S0022",
-                "S0023",
-                "S0024",
-                "S0025",
-                "S0026",
-                "S0027",
-                "S0028"
-              ]
-            }
-          },
           {
             "kind": "adjustment",
             "subject": "SV-KEN-01",
@@ -63211,88 +63170,13 @@
         ],
         "questions": [
           {
-            "subject": "Unattributed site sign-ins",
-            "reason": "No employee identity is assumed for unmatched sign-ins; dates provide possible-visit bounds only.",
-            "required_confirmation": "Confirm whether the unmatched entries are nonpayroll visitors and correct any missing employee identities.",
+            "subject": "External site visitors",
+            "reason": "The source explicitly records external governmental inspectors with no employee ID or matching payroll name; their visits are excluded from employee site-day bounds, with the original records retained.",
+            "required_confirmation": "Confirm the cited inspectors were external nonpayroll visitors, the recorded roles are accurate, and the employee sign-in records are complete; correct any conflicting identity evidence.",
             "sources": [
               "S0020"
             ],
             "proposed_treatment": null
-          },
-          {
-            "subject": "Marissa Gale [SH-E06]",
-            "reason": "Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.",
-            "required_confirmation": "Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period.",
-            "sources": [
-              "S0010",
-              "S0004",
-              "S0005",
-              "S0015",
-              "S0016",
-              "S0017",
-              "S0018",
-              "S0019",
-              "S0020",
-              "S0001",
-              "S0006",
-              "S0007",
-              "S0008",
-              "S0009",
-              "S0021",
-              "S0022",
-              "S0023",
-              "S0024",
-              "S0025",
-              "S0026",
-              "S0027",
-              "S0028",
-              "S0002",
-              "S0011",
-              "S0012",
-              "S0013",
-              "S0014",
-              "S0003"
-            ],
-            "proposed_treatment": {
-              "class_code": "C-110",
-              "rationale_ref": "CG-04",
-              "wages": "71250.45",
-              "reason": "Conditional treatment using only confirmed visits, pending identity/completeness confirmation; not a verified allocation.",
-              "required_confirmation": [
-                "Auditor or employer must confirm: Office visit bounds or the governing field code do not establish one verified classification. 4 distinct job-site days is at most four in the audit period. 5 distinct job-site days is at least five; use the evidenced governing field code for the whole audit period."
-              ],
-              "rule_sources": [
-                "S0002",
-                "S0011",
-                "S0012",
-                "S0013",
-                "S0014"
-              ],
-              "evidence_sources": [
-                "S0010",
-                "S0004",
-                "S0005",
-                "S0015",
-                "S0016",
-                "S0017",
-                "S0018",
-                "S0019",
-                "S0020",
-                "S0001",
-                "S0006",
-                "S0007",
-                "S0008",
-                "S0009",
-                "S0021",
-                "S0022",
-                "S0023",
-                "S0024",
-                "S0025",
-                "S0026",
-                "S0027",
-                "S0028"
-              ]
-            }
           },
           {
             "subject": "SV-KEN-01",
@@ -63372,8 +63256,8 @@
         "reconciliation": {
           "allocation": {
             "register_total": "461879.70",
-            "allocated_total": "390629.25",
-            "unresolved_total": "71250.45",
+            "allocated_total": "461879.70",
+            "unresolved_total": "0.00",
             "difference": "0.00",
             "employee_differences": {
               "SH-E01": "0.00",
@@ -63399,8 +63283,8 @@
           },
           "independent": {
             "register_total": "461879.70",
-            "allocated_total": "390629.25",
-            "unresolved_total": "71250.45",
+            "allocated_total": "461879.70",
+            "unresolved_total": "0.00",
             "difference": "0.00",
             "employee_differences": {
               "SH-E01": "0.00",
@@ -63494,14 +63378,14 @@
           "weekly": null,
           "combined": {
             "employee_register_total": "461879.70",
-            "employee_allocated": "390629.25",
-            "employee_open": "71250.45",
+            "employee_allocated": "461879.70",
+            "employee_open": "0.00",
             "subcontractor_payment_total": "152117.05",
             "subcontractor_added": "24693.39",
             "subcontractor_nonpayroll": "81478.01",
             "subcontractor_open_basis": "45945.65",
             "confirmed_payroll": "486573.09",
-            "classified_payroll": "415322.64",
+            "classified_payroll": "486573.09",
             "difference": "0.00",
             "employee_reconciled": true,
             "subcontractor_reconciled": true,
@@ -64226,10 +64110,10 @@
           "register_total": "461879.70",
           "register_difference": "0.00",
           "verified_differences": {
-            "C-110": "-131091.15",
+            "C-110": "-59840.70",
             "H-420": "84534.09"
           },
-          "unresolved_payroll": "71250.45",
+          "unresolved_payroll": "0.00",
           "definitive": false
         },
         "owner": {
@@ -64875,11 +64759,11 @@
       "employer": "severn-homebuilders",
       "directory": "/home/maxg/insurance01-inputs/employer-files/severn-homebuilders",
       "path": "/home/maxg/ch03-premium-audit/deliverables/codes/severn-homebuilders.csv",
-      "sha256": "4dd5979377d949d81c05d6f7d46eaa78832702aa47721312b61932691d6549f5",
+      "sha256": "e437c6c7360972513326d02efa546efb74f9d920f000eed00ba82c1520d63141",
       "rows": [
         {
           "class_code": "C-110",
-          "payroll_allocated": "46118.25",
+          "payroll_allocated": "117368.70",
           "rationale_ref": "CG-04"
         },
         {
@@ -64888,7 +64772,7 @@
           "rationale_ref": "CG-15"
         }
       ],
-      "verified_total": "415322.64"
+      "verified_total": "486573.09"
     }
   ],
   "errors": []
