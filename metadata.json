@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.11.3",
+  "checkpoint_id": "01M6RYMG3MXAE7X39JM1KGJDBV",
+  "strategy": "manual-commit",
+  "branch": "omega/insurance01-attempt2",
+  "checkpoints_count": 22,
+  "files_touched": [
+    "deliverables/audit-questions.md",
+    "deliverables/audit-report.md",
+    "deliverables/classification-review.json",
+    "deliverables/codes/severn-homebuilders.csv",
+    "skills/class-code-assistant/employer_processing.py",
+    "skills/class-code-assistant/homebuilding_processing.py",
+    "skills/class-code-assistant/legal_office_processing.py",
+    "skills/class-code-assistant/tests/real_audit_support.py",
+    "skills/class-code-assistant/tests/test_audit_questions.py",
+    "skills/class-code-assistant/tests/test_audit_report.py",
+    "skills/class-code-assistant/tests/test_electrical_processing.py",
+    "skills/class-code-assistant/tests/test_employer_processing.py",
+    "skills/class-code-assistant/tests/test_homebuilding_processing.py",
+    "skills/class-code-assistant/tests/test_legal_office_processing.py",
+    "skills/class-code-assistant/tests/test_preview.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 1990873,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 108363264,
+    "output_tokens": 941350,
+    "api_call_count": 798,
+    "subagent_tokens": {
+      "input_tokens": 111813,
+      "cache_creation_tokens": 0,
+      "cache_read_tokens": 1201664,
+      "output_tokens": 7812,
+      "api_call_count": 29
+    },
+    "subagent_tokens_complete": true
+  }
+}

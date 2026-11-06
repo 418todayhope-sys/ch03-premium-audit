@@ -1,0 +1,1033 @@
+We're developing INSURANCE-01, a reusable Class Code and Premium Audit Agent Skill.
+
+Inspect the repository and identify what original assignment materials, employer records, Classification Guide, and interview exports are available locally.
+
+We need to classify payroll for six employers using company-specific rules, produce auditable CSVs and reports, and preserve unresolved cases for human review.
+
+First, report exactly which source files are missing and propose the simplest way to make the authoritative evidence available for development and future reruns.
+
+Do not invent business rules, begin implementation, modify files, commit, push, or upload anything yet. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Source preparation, Step 1.
+
+Preserve the latest complete original interview Markdown export from Downloads in the repository's interviews/ directory.
+
+The earlier and later exports contain overlapping conversation history. Compare them and retain only the final complete export for that interview session, preserving its original contents and metadata byte-for-byte.
+
+Verify the copy with SHA-256 and report the result.
+
+Keep the original assignment, Classification Guide, and employer archive unchanged in Downloads for now. These are local snapshots; future Skill runs must support reading authoritative source locations supplied by the auditor, rather than hard-coding these six employers.
+
+Do not implement classification logic yet. Do not commit, push, synchronize, or upload anything.
+
+Report the created file and Git status.
+
+---
+
+INSURANCE-01 — Prepare local development inputs.
+
+Using the original files already located in /mnt/c/Users/PC/Downloads, create a separate working directory at /home/maxg/insurance01-inputs.
+
+Copy classification-guide.md and extract the employer-files ZIP into that directory. Preserve the original source files unchanged.
+
+Verify that all six employer folders and all 34 employer records are present and readable. Check that the Classification Guide contains its original paragraph identifiers.
+
+These are development snapshots. The reusable Skill must later accept configurable source locations and support rereading the authoritative documents on new runs, as required by the assignment.
+
+Do not implement classification logic yet. Do not modify existing repository files, commit, push, synchronize, or upload anything.
+
+Report the directory structure, verification results, and any errors.
+
+---
+
+INSURANCE-01 — Implement Step 1: Reusable input reader.
+
+Create a minimal Python input-reading component under skills/class-code-assistant/.
+
+Requirements:
+1. Accept configurable paths for the Classification Guide and employer records.
+2. Read Markdown and CSV files without hard-coding the six employers or their answers.
+3. Preserve classification paragraph identifiers and source filenames.
+4. Parse payroll money using Decimal, not floating-point arithmetic.
+5. Validate missing files, malformed CSVs, and invalid payroll amounts with clear errors.
+6. Add focused tests using small synthetic fixtures.
+7. Run the reader against /home/maxg/insurance01-inputs and report the results.
+
+For this step, do not classify employees, calculate allocations, or generate final deliverables.
+
+Preserve existing files and Entire capture. Do not commit, push, synchronize, deploy, or upload anything.
+
+Explain the design and tests performed.
+
+---
+
+INSURANCE-01 — Implement a reusable classification-rule evaluator.
+
+Build on the existing input reader without rewriting it.
+
+Read the original Classification Guide and preserved interview transcript. Implement the verified house practices for contractor office site visits, roofing/siding thresholds, courier weekly ride-alongs, and the catering gross-receipts threshold.
+
+Preserve each rule's source reference and its applicability boundaries. Do not apply contractor-specific rules to unrelated industries.
+
+If evidence is insufficient or no rule exists, return an OPEN decision with the reason and required human confirmation. Never invent a classification.
+
+Add focused synthetic tests for thresholds, exceptions, and missing evidence. Run them and report results.
+
+Do not calculate final payroll allocations or generate deliverables yet. Do not commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Implement the base payroll allocation component.
+
+Build on the existing input reader and classification evaluator without rewriting them.
+
+1. Implement reusable payroll allocation functions using Python Decimal, preserving amounts to the cent.
+2. Accept verified classification decisions and employee payroll records as inputs.
+3. Aggregate wages by classification code without double-counting.
+4. Preserve each employee's source record and applicable rule reference.
+5. Keep unresolved classifications OPEN, with their payroll amounts tracked separately rather than assigning a guessed code.
+6. Reconcile allocated and unresolved wages against the payroll register.
+7. Add focused synthetic tests for correct totals, multiple classifications, missing decisions, and rounding.
+8. Run tests and report results.
+
+For this step, exclude subcontractor payments and travel allowance adjustments; we will implement those separately.
+
+Do not generate final deliverables yet. Do not hard-code employer answers. Do not commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Implement reusable payroll adjustments.
+
+Build on the existing reader, rule evaluator, and payroll allocator without rewriting them.
+
+Implement:
+
+1. Subcontractor adjustments: verify certificates cover the entire audit period; include 60% of payments without valid coverage under the documented work code.
+2. Treat expired or missing certificates according to Nadia's confirmed rule. Flag mismatched subcontractor names as OPEN rather than assuming identity.
+3. Travel allowances: exclude up to $47 per worker per documented out-of-town day; include the excess in payroll.
+4. Flag allowances with zero documented travel days as OPEN, with a proposed treatment clearly separated from verified amounts.
+5. Use Decimal for exact currency calculations, avoid double-counting, and preserve source records and rule references.
+6. Add synthetic boundary, missing-evidence, and reconciliation tests. Run the full test suite.
+
+Do not produce final employer allocations or deliverables yet.
+
+Do not modify original source files, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+Report test results, limitations, and remaining OPEN cases.
+
+---
+
+INSURANCE-01 — Implement the first end-to-end employer processing test using Larkspur Lane Bistro.
+
+Reuse the existing input reader, classification evaluator, payroll allocator, and adjustment components.
+
+1. Build a minimal reusable processing workflow that accepts configurable employer and Classification Guide paths.
+2. Run it against Larkspur Lane Bistro using /home/maxg/insurance01-inputs.
+3. Calculate the catering percentage using Decimal and apply Nadia's verified 40% rule.
+4. Classify payroll using the actual evidence, not employer-specific hard-coded answers.
+5. Compare the calculated allocation against the employer's application and payroll register.
+6. Preserve source references and report any missing or conflicting evidence as OPEN.
+7. Independently verify the payroll reconciliation to the cent.
+8. Add focused integration tests and run the complete test suite.
+
+Report the actual classification results, supporting evidence, reconciliation, and any remaining uncertainties.
+
+Do not generate final deliverables yet. Preserve existing functionality and Entire capture.
+
+Do not commit, push, synchronize, or upload anything.
+
+---
+
+INSURANCE-01 — Integrate Harbor Point Legal.
+
+Extend the existing reusable employer processing workflow without rewriting working components.
+
+Use the local Classification Guide, interview evidence, and Harbor Point Legal's actual records.
+
+1. Evaluate all five employees using their documented duties and payroll.
+2. Investigate Tomas Reyes's six condominium site visits.
+3. Respect Nadia's clarification that the contractor office-visit rule has no established application to employers without a field code.
+4. Do not invent a field classification. Where the records do not justify a final classification, retain an OPEN decision with a proposed treatment, supporting evidence, and required confirmation.
+5. Compare the resulting allocations against the employer's application.
+6. Reconcile all wages, including OPEN amounts, to the cent.
+7. Add focused integration tests and run the full test suite.
+
+Report each employee's classification, payroll amount, evidence, and remaining uncertainties.
+
+Preserve the existing Larkspur Lane Bistro results and functionality.
+
+Do not generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+Extend the existing reusable employer-processing workflow. Preserve all working components and previous employer results.
+
+Use the actual Bay Crest records and verified company rules.
+
+1. For each field worker, count distinct roofing days from crew-timesheets.csv.
+2. Apply Nadia's contractor roofing/siding rule: 15 or more roofing days assigns the worker's entire payroll to R-310; fewer than 15 assigns it to R-320 within the rule's applicable scope.
+3. Evaluate the estimator's site visits using the contractor office-worker rule. Determine the governing field code from evidence, not job titles or hard-coded assumptions.
+4. Keep the bookkeeper under C-110 only when supported by the records.
+5. Compare the resulting allocations against the employer's reported split.
+6. Identify every employee-level classification change and its payroll amount.
+7. Preserve rule references, timesheet evidence, and any OPEN conditions.
+8. Independently reconcile all payroll to the cent.
+9. Add focused integration tests and run the entire existing test suite.
+
+Report the classification of all ten employees, code totals, discrepancies, supporting evidence, and remaining uncertainties.
+
+Do not generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Integrate Severn Homebuilders.
+
+Extend the reusable processing workflow without rewriting existing components. Preserve all three previous employer results.
+
+Using Severn's actual records and verified company rules:
+
+1. Classify all eight employees by documented duties.
+2. Apply the contractor office-worker rule using distinct site-visit days. Determine the governing field code from evidence.
+3. Examine all subcontractor payments and insurance certificates.
+4. Apply the verified 60% payroll rule where coverage is missing or expires before the audit period ends.
+5. Assign subcontractor payroll to the appropriate work classification, distinguishing general homebuilding from roofing.
+6. Keep the mismatched subcontractor certificate name OPEN for employer confirmation. Do not assume two differently named entities are identical.
+7. Exclude the owner only where the documented election supports exclusion.
+8. Reconcile employee wages separately from subcontractor additions, then calculate the combined auditable payroll.
+9. Compare results against the employer application and identify every adjustment with its amount and supporting records.
+10. Add focused integration tests and run the complete test suite.
+
+Report employee classifications, subcontractor adjustments, class-code totals, reconciliation, evidence references, and remaining OPEN items.
+
+Do not generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Resume the interrupted Severn Homebuilders implementation.
+
+The previous session created 13 tests in test_homebuilding_processing.py, but usage limits interrupted implementation. Five tests failed and eight errored.
+
+First inspect the existing plan, tests, and working code. Preserve the three previously completed employer workflows.
+
+Implement the missing Severn processing functionality required by the tests, using the actual employer records and verified company rules.
+
+Important:
+- Do not assume the unattributed County inspector sign-in belongs to Marissa Gale.
+- Keep certificate-name mismatches OPEN for confirmation.
+- Apply the confirmed 60% subcontractor treatment where coverage is missing or expired.
+- Reconcile employee wages and subcontractor additions separately.
+- Preserve source citations and human-review requirements.
+
+Run the Severn tests, then the entire existing test suite. Report classification totals, OPEN cases, failures, and regressions.
+
+Do not rewrite working components unnecessarily. Do not commit, push, synchronize, or upload. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Integrate Annapolis Courier.
+
+Extend the existing reusable processing workflow without rewriting working components. Preserve all four previous employer results.
+
+Use the actual Annapolis Courier records and Nadia's verified weekly ride-along rule.
+
+1. Read route-log.csv, weekly-payroll.csv, payroll-register.csv, application.md, and supporting employer records.
+2. For each inside employee, count distinct ride-along days within each Monday-to-Sunday payroll week.
+3. Apply Nadia's rule: two or more ride days allocate the employee's entire weekly pay to T-610; zero or one ride day keeps that week's pay under C-110.
+4. Use the documented duties to classify regular drivers and the bookkeeper.
+5. Detect duplicate, missing, conflicting, or unattributed route records without inventing employee identities.
+6. Reconcile all weekly payroll amounts against the annual register to the cent.
+7. Compare calculated classification totals against the employer's submitted split.
+8. Preserve employee IDs, pay-week dates, route evidence, and exact rule references.
+9. Keep any unsupported classification OPEN with a separate proposed treatment.
+10. Add focused integration tests, including weekly threshold boundaries, and run the complete existing test suite.
+
+Report employee-level and class-code totals, payroll corrections, supporting evidence, OPEN findings, and test results.
+
+Do not generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Integrate Patuxent Electric, the sixth employer.
+
+Extend the existing reusable workflow. Preserve all five completed employer paths and existing components.
+
+Use Patuxent's actual employer records, Classification Guide, and Nadia's verified interview rules.
+
+1. Classify all seven employees according to their documented duties.
+2. Apply CG-05 to owner Raymond Dunmore, who has not filed an exclusion and performs electrical fieldwork.
+3. Verify office administrator Linda Marsh's classification using field notes.
+4. Calculate travel allowances with Decimal: exclude up to $47 per documented out-of-town day; count any excess as payroll under the applicable work code.
+5. Investigate Kyle Brandt's $390 allowance with zero recorded travel days. Keep it OPEN, with a separate proposed treatment, evidence, and questions for human confirmation.
+6. Confirm allowance amounts are not already included in regular wages before adding them.
+7. Reconcile original wages, verified allowance additions, and unresolved amounts separately.
+8. Compare the results against the employer's application and identify every adjustment.
+9. Preserve employee IDs, source citations, and exact rule references.
+10. Add focused integration tests and run the complete test suite, including regression tests for the five previous employers.
+
+Report employee classifications, payroll totals by code, verified adjustments, OPEN cases, independent reconciliation, and test results.
+
+Do not generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Build the unified reusable execution interface.
+
+All six employer workflows are implemented and the existing 236 tests pass.
+
+Inspect the existing code and reuse the working components. Do not rewrite them.
+
+1. Provide one documented Python command-line entry point that accepts configurable Classification Guide and employer-record paths.
+2. Support processing one selected employer or every employer folder discovered in an input directory.
+3. Reuse the six existing business-processing paths without hard-coding employer names, payroll answers, or absolute development paths.
+4. Reread the selected input sources on each invocation. Do not silently substitute cached snapshots for newly supplied records.
+5. Produce a clear preview of verified class-code totals, OPEN payroll, proposed treatments, source references, reconciliation, and employer-reported differences.
+6. Preserve distinct employer results and prevent an error in one employer from silently corrupting another.
+7. Add focused tests for single-employer execution, all-employer execution, repeatability, missing input, and error handling.
+8. Run the full test suite and verify all six real employer results remain unchanged.
+
+Do not generate the final deliverable files yet. Do not alter original evidence, commit, push, synchronize, deploy, or upload anything. Preserve Entire capture.
+
+Report the exact execution commands, test results, and remaining limitations.
+
+---
+
+INSURANCE-01 — Step 29: Create the reusable Agent Skill.
+
+Our six employer workflows and unified runner are implemented, with 255 tests passing.
+
+I want to package this work as a reusable Agent Skill so a future operator can process another employer without changing the source code. Preserve the verified classification rules, financial calculations, evidence references, and human-review boundaries.
+
+Create skills/class-code-assistant/SKILL.md.
+
+Requirements:
+1. Include valid Skill name and description metadata.
+2. Document the purpose, required inputs, dependencies, invocation, and outputs.
+3. Reference the existing preview.py runner and supporting modules rather than duplicating their logic.
+4. Explain how to run one employer or all discovered employers using configurable source paths.
+5. Require the current Classification Guide and employer records to be reread for each run.
+6. Preserve exact rule paragraph references and interview evidence.
+7. Explain how verified results, OPEN findings, and proposed treatments must remain separate.
+8. Document errors, missing evidence, reconciliation requirements, and human approval boundaries.
+9. Describe the planned final CSV and audit report outputs without falsely claiming they are implemented.
+10. Add focused checks validating the Skill metadata, references, and documented commands.
+
+Run the complete test suite and report results.
+
+Do not rewrite working components, generate final deliverables, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Step 30: Generate the six required classification CSVs.
+
+The reusable Agent Skill and all six employer workflows are working, with 262 tests passing.
+
+Build a reusable CSV deliverable generator using the existing processing engine. Preserve all existing functionality.
+
+Requirements:
+
+1. Generate one CSV per employer in deliverables/codes/, using the exact filenames required by the original assignment.
+2. Use exactly these columns:
+   class_code,payroll_allocated,rationale_ref
+3. Aggregate payroll by class code using Decimal with exactly two decimal places.
+4. Exclude zero-payroll rows.
+5. Use exact paragraph identifiers from the Classification Guide for rationale_ref. Do not invent references.
+6. Read classifications and payroll amounts from the existing processing results, never from hard-coded employer answers.
+7. Keep OPEN payroll and unapproved proposed treatments separate from verified allocations. Do not silently include them in CSV totals.
+8. Preserve OPEN amounts and reconciliation information for the later audit reports.
+9. Validate generated CSVs against the source records and processing engine.
+10. Add tests for formatting, exact references, reconciliation, missing evidence, and processing a new employer.
+11. Run the complete test suite and report the generated files, totals, OPEN amounts, and any unresolved limitations.
+
+If a required classification reference cannot be supported, flag the issue instead of fabricating a value.
+
+Do not generate audit-questions.md or audit-report.md yet.
+
+Do not modify original evidence, commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Step 31: Generate the required audit-questions.md.
+
+Build a reusable audit-question generator using the existing processing engine, six CSVs, and classification-review.json.
+
+Requirements:
+
+1. Generate deliverables/audit-questions.md with one clearly labeled section per employer.
+2. Include employer-confirmation questions for every classification/payroll adjustment and every supporting record relied upon, as required by the assignment.
+3. Identify the relevant employee, subcontractor, payment, date or pay week, and source document.
+4. Explain what needs confirmation and why it matters to the allocation.
+5. Clearly distinguish verified calculations, proposed treatments, OPEN findings, and questions requiring human approval.
+6. Include unresolved evidence concerning Tomas Reyes, Larkspur catering, Marissa Gale, the Kent Island certificate, Kyle Brandt, and any other recorded exceptions.
+7. Preserve the documented priority calls: Severn Homebuilders and Bay Crest Exteriors, with their evidence-based reasons.
+8. Generate questions from structured processing results rather than hard-coded employer answers.
+9. Ensure every material adjustment and relied-upon source record has traceable question coverage. Avoid duplicate questions while preserving specific employee and record identifiers.
+10. Add automated coverage tests comparing the questions against classification-review.json, source evidence, and generated CSVs.
+11. Run the complete test suite and independently inspect the resulting document for missing questions or unsupported claims.
+
+Report the number of questions per employer, uncovered evidence, test results, and any limitations.
+
+Do not generate audit-report.md yet. Do not rewrite working components or modify original evidence. Do not commit, push, synchronize, or upload anything. Preserve Entire capture.
+
+---
+
+INSURANCE-01 — Step 32: Generate the required audit-report.md.
+
+Build a reusable audit-report generator using the existing processing engine, classification-review.json, six classification CSVs, and audit-questions.md.
+
+Requirements:
+
+1. Generate deliverables/audit-report.md with a separate section for all six employers.
+2. Show the employer's reported classifications and payroll alongside the verified allocations and exact dollar differences.
+3. Explain whether each employer's submitted split is accepted, corrected, or partially unresolved.
+4. Identify every adjustment by employee or payment, amount to the cent, reason, and supporting source records.
+5. Preserve exact Classification Guide paragraph references and verified interview rules.
+6. Clearly separate VERIFIED results, OPEN payroll, and unapproved PROPOSED treatments.
+7. Explain every unresolved case, required evidence, and responsible human reviewer. Never present proposals as approved results.
+8. Reconcile original employee wages, verified adjustments, excluded payments, and unresolved amounts without double-counting.
+9. Explain the priority recommendations for calling Severn Homebuilders and Bay Crest Exteriors.
+10. Generate the report from structured processing results, not hard-coded employer answers.
+11. Add focused automated tests checking the report against all six CSVs, classification-review.json, and audit-questions.md.
+12. Independently review the finished document for missing adjustments, unsupported claims, and inconsistent totals.
+
+Run the complete test suite and report the results, report coverage, remaining limitations, and any unresolved contradictions.
+
+Preserve all existing functionality, source files, and Entire capture.
+
+Do not commit, push, synchronize, deploy, submit, or upload anything.
+
+---
+
+INSURANCE-01 — Step 32: Generate the required audit-report.md.
+
+Build a reusable audit-report generator using the existing processing engine, classification-review.json, six classification CSVs, and audit-questions.md.
+
+Requirements:
+
+1. Generate deliverables/audit-report.md with a separate section for all six employers.
+2. Show the employer's reported classifications and payroll alongside the verified allocations and exact dollar differences.
+3. Explain whether each employer's submitted split is accepted, corrected, or partially unresolved.
+4. Identify every adjustment by employee or payment, amount to the cent, reason, and supporting source records.
+5. Preserve exact Classification Guide paragraph references and verified interview rules.
+6. Clearly separate VERIFIED results, OPEN payroll, and unapproved PROPOSED treatments.
+7. Explain every unresolved case, required evidence, and responsible human reviewer. Never present proposals as approved results.
+8. Reconcile original employee wages, verified adjustments, excluded payments, and unresolved amounts without double-counting.
+9. Explain the priority recommendations for calling Severn Homebuilders and Bay Crest Exteriors.
+10. Generate the report from structured processing results, not hard-coded employer answers.
+11. Add focused automated tests checking the report against all six CSVs, classification-review.json, and audit-questions.md.
+12. Independently review the finished document for missing adjustments, unsupported claims, and inconsistent totals.
+
+Run the complete test suite and report the results, report coverage, remaining limitations, and any unresolved contradictions.
+
+Preserve all existing functionality, source files, and Entire capture.
+
+Do not commit, push, synchronize, deploy, submit, or upload anything.
+
+---
+
+INSURANCE-01 — Step 33: Complete the root README and verify reproducibility.
+
+The reusable Skill, six employer CSVs, audit questions, and audit report are implemented. The latest verification passed 335 tests.
+
+1. Update the root README.md with clear setup instructions, Python dependencies, source requirements, and commands to run the Skill for one employer and all six employers.
+2. Explain how a new operator can process another employer using configurable source paths without editing Python code.
+3. Document how to regenerate all required CSVs, audit-questions.md, and audit-report.md using the implemented generators.
+4. Explain VERIFIED, OPEN, and PROPOSED results, reconciliation, evidence references, and human approval requirements.
+5. Document input errors, unsupported schemas, rerun behavior, and remaining limitations.
+6. Explain the difference between authoritative sources and preserved local development snapshots.
+7. Verify that every documented command actually works.
+8. Independently regenerate outputs in a temporary directory where supported, and compare them against the existing deliverables without overwriting originals.
+9. Verify that partially unresolved employers still retain their verified corrections in the report.
+10. Run the complete test suite and report any reproducibility failures, missing dependencies, or inconsistent outputs.
+
+Preserve the existing implementation, original evidence, interview export, and Entire capture.
+
+Do not commit, push, synchronize, deploy, submit, or upload anything.
+
+Report the README changes, exact verification results, and remaining limitations.
+
+---
+
+INSURANCE-01 — Step 34: Final independent pre-commit review.
+
+Perform a read-only audit of the complete repository against the original INSURANCE-01 assignment and starter README.
+
+Check:
+
+1. All required deliverables exist at their exact paths and meet their specified formats.
+2. The six CSVs, audit report, audit questions, and structured review data agree financially and logically.
+3. Every material adjustment has supporting source references and employer-confirmation questions.
+4. OPEN cases and proposed treatments are never misrepresented as approved classifications.
+5. The Skill works with configurable sources and does not hard-code the six employer answers.
+6. The original interview export remains byte-for-byte preserved.
+7. The README commands work and the 335-test suite still passes.
+8. Check for secrets, accidentally included local input snapshots, temporary files, absolute-path dependencies, and inappropriate Git-tracked Entire files.
+9. Inspect Git status and Entire capture/checkpoint status. Confirm automatic session uploads remain disabled.
+10. Identify any remaining assignment requirements that are missing, only partially satisfied, or unverified.
+
+Report a concise PASS, PARTIAL, or FAIL checklist with evidence for each finding.
+
+Do not modify files, fix issues, install dependencies, stage, commit, push, synchronize, or upload anything. Do not alter Entire configuration.
+
+---
+
+INSURANCE-01 — Step 35: Resolve the Larkspur audit-report finding.
+
+The independent pre-commit review passed the core implementation but identified one actionable gap: Larkspur Lane Bistro's OPEN catering classification lacks a conditional proposed treatment in audit-report.md.
+
+Make the smallest focused correction.
+
+1. Inspect the existing structured proposals, report generator, and source evidence.
+2. Document a conditional F-710 proposal only if complete audit-period receipts confirm catering below 40%, consistent with Nadia's verified rule.
+3. Preserve the original classification as OPEN. Do not move unapproved wages into verified CSV totals.
+4. Clearly state the missing evidence, reason for uncertainty, and required human confirmation.
+5. Generate the proposal through the reusable workflow, not a hard-coded report edit.
+6. Update affected deliverables and add a regression test.
+7. Run the full test suite and verify all six employer results and reconciliations.
+8. Confirm no other business rules, existing evidence, or Entire settings changed.
+
+Report the correction, tests, and any remaining gaps.
+
+Do not commit, push, synchronize, upload, or submit anything.
+
+---
+
+INSURANCE-01 — Step 36: Pre-commit Git and Entire evidence review.
+
+The latest implementation has 338 passing tests, all six employer outputs, and a corrected Larkspur proposal.
+
+Perform a read-only pre-commit inspection.
+
+1. Review Git status, tracked changes, untracked files, and .gitignore.
+2. Identify exactly which files should be committed to satisfy the assignment.
+3. Identify files that must remain local, including secrets, temporary outputs, and machine-specific settings.
+4. Verify the original interview transcript and required deliverables are included in the proposed commit manifest.
+5. Inspect Entire capture, available local checkpoints, and session history.
+6. Investigate the previously observed Entire exited/active session-state discrepancy without modifying capture.
+7. Confirm automatic checkpoint uploads remain disabled.
+8. Verify the 338-test baseline and ensure the latest Larkspur correction is represented in the proposed files.
+9. Report a precise inclusion/exclusion manifest and any remaining blockers.
+
+Do not modify, stage, commit, push, synchronize, upload, or submit anything.
+
+Preserve all evidence and Git history.
+
+---
+
+INSURANCE-01 — Step 39: Create the authorized local Git commit.
+
+I explicitly authorize staging the reviewed submission files and creating ONE local Git commit.
+
+1. Verify the current branch, Git status, and Step 36 inclusion/exclusion manifest.
+2. Stage ONLY the reviewed submission files: implementation, Skill, tests, README, six CSVs, audit questions, audit report, review JSON, original interview export, and required non-sensitive integration configuration.
+3. Exclude local Entire settings, temporary files, secrets, source snapshots, caches, and optional development plans.
+4. Inspect the exact staged file list and check for accidental files, secrets, and whitespace errors.
+5. Run the complete test suite. If verification fails or the staged files differ from the reviewed manifest, STOP before committing.
+6. If everything passes, create one local commit with message:
+   "Implement reusable premium audit skill and deliverables"
+7. Allow Entire's normal local commit hooks to capture the checkpoint. Do not bypass hooks.
+8. After committing, verify Git status, commit SHA, committed file count, Entire checkpoint linkage, and whether the latest deliverables are included in the checkpoint.
+
+Do not push, synchronize, upload, deploy, or submit anything.
+
+Do not amend, reset, or rewrite Git history.
+
+Report the results and any remaining issues.
+
+---
+
+INSURANCE-01 — Step 39A: Fix pre-commit whitespace errors.
+
+The authorized local commit stopped because git diff --cached --check detected extra blank lines at EOF in audit-questions.md and audit-report.md.
+
+1. Inspect the two formatting errors and their generators.
+2. Make the smallest correction so regenerated Markdown ends with exactly one newline, without extra blank lines.
+3. Regenerate only the affected deliverables.
+4. Preserve all report content, calculations, citations, OPEN cases, and proposed treatments.
+5. Stage only the affected generator and deliverable files.
+6. Run git diff --cached --check and the full test suite.
+7. Confirm the staged manifest contains only the reviewed submission files and the necessary formatting fixes.
+8. Verify regenerated outputs remain reproducible.
+
+Do not commit yet. Do not push, synchronize, upload, or submit anything.
+
+Report the verification results and whether the existing authorized local commit can proceed.
+
+---
+
+INSURANCE-01 — Step 39B: Complete the authorized local commit.
+
+The 52 reviewed submission files are staged. All 338 tests pass, git diff --cached --check passes, and regenerated deliverables match.
+
+I authorize creating the previously approved ONE local Git commit.
+
+1. Confirm the staged manifest still contains exactly the 52 reviewed files.
+2. Create the local commit with message:
+   "Implement reusable premium audit skill and deliverables"
+3. Allow Entire's normal Git hooks to execute. Do not bypass them.
+4. Verify the commit SHA, Git status, and committed file count.
+5. Inspect the commit for an Entire-Checkpoint trailer and verify the associated capture records.
+6. Confirm that the final Larkspur correction and all required deliverables are included.
+7. Report any checkpoint or session-state issues without attempting destructive repairs.
+
+Do not amend, reset, rewrite history, push, synchronize, upload, deploy, or submit.
+
+If the commit fails, stop and report the exact error.
+
+---
+
+INSURANCE-01 — Step 40: Verify GitHub publication readiness.
+
+Perform a read-only review.
+
+1. Inspect the original assignment and README for exact GitHub submission requirements.
+2. Check the current branch, commit SHA, and remote URL.
+3. Determine whether the repository should be pushed to the training repository, a fork, or a repository under my GitHub account.
+4. Verify the local Entire checkpoint linkage and confirm automatic uploads remain disabled.
+5. Identify the exact next action needed to publish the completed submission safely.
+
+Do not modify files, change remotes, stage, commit, push, synchronize, upload, or submit.
+
+Report the required destination and any blockers.
+
+---
+
+INSURANCE-01 — Step 42: Configure the personal GitHub remote.
+
+The personal repository now exists at:
+https://github.com/418todayhope-sys/ch03-premium-audit.git
+
+1. Preserve the existing GitRollTraining origin remote.
+2. Add the personal repository as a new remote named submission.
+3. Verify both remote URLs using git remote -v.
+4. Confirm branch main and local commit a1ace9396671ac6838eef2226373d733604050cd.
+5. Confirm the Entire checkpoint linkage and that automatic session uploads remain disabled.
+
+Do not modify code, commit, push, synchronize, or upload anything.
+
+Report the verified remote configuration and Git status.
+
+---
+
+INSURANCE-01 — Step 43: Authorized GitHub publication.
+
+I explicitly authorize pushing the existing local main branch commit a1ace9396671ac6838eef2226373d733604050cd to the submission remote ONLY.
+
+Destination:
+https://github.com/418todayhope-sys/ch03-premium-audit.git
+
+Instructions:
+
+1. Verify that main points to the exact authorized commit.
+2. Verify submission points to my personal GitHub repository and origin still points to GitRollTraining.
+3. Confirm the tracked working tree is clean and no unreviewed files are staged.
+4. Confirm Entire automatic session uploads remain disabled.
+5. Push main to submission using:
+   git push -u submission main
+6. Do not force-push or push any other branches or tags.
+7. Do not push to origin.
+8. Do not enable or upload Entire sessions or checkpoint refs.
+9. After the push, verify that submission/main points to the authorized commit and that all 52 committed files are preserved.
+10. Report the remote URL, commit SHA, push result, Git status, and any warnings.
+
+If the push requires authentication or encounters a remote-history conflict, stop and report the issue. Do not bypass protections or rewrite history.
+
+Do not create additional commits, change files, deploy, or submit anything to the fellowship.
+
+---
+
+INSURANCE-01 — Step 44: Prepare Entire evidence for fellowship submission.
+
+Our completed project is published at:
+https://github.com/418todayhope-sys/ch03-premium-audit
+
+Published commit:
+a1ace9396671ac6838eef2226373d733604050cd
+
+Entire checkpoint:
+01M6PH49FR53AABARMSCWB4ZJ7
+
+Fellowship staff expect genuine Entire coding-session evidence to be available with the submitted Git revision.
+
+Perform a READ-ONLY inspection.
+
+1. Verify the published commit and local Entire checkpoint linkage.
+2. Inspect current Entire settings, hooks, branches, and session records.
+3. Determine how Entire CLI 0.11.3 publishes genuine session evidence.
+4. Identify exactly which session records and Git refs would be uploaded.
+5. Confirm whether publication can be restricted to this project's genuine sessions.
+6. Check for secrets, unrelated conversations, and sensitive information.
+7. Determine whether the evidence would become publicly accessible.
+8. Identify the safest supported procedure for making the evidence accessible alongside the published GitHub revision.
+9. Explain whether the exited/active session-state discrepancy affects publication.
+10. Provide the exact commands required and any risks, but DO NOT EXECUTE THEM.
+
+Do not change settings, files, remotes, Git history, or Entire checkpoints.
+
+Do not commit, push, upload, synchronize, or submit anything.
+
+Report findings and stop for authorization.
+
+
+
+ Copy prompt
+
+---
+
+INSURANCE-01 — Step 44: Prepare Entire evidence for fellowship submission.
+
+Our completed project is published at:
+https://github.com/418todayhope-sys/ch03-premium-audit
+
+Published commit:
+a1ace9396671ac6838eef2226373d733604050cd
+
+Entire checkpoint:
+01M6PH49FR53AABARMSCWB4ZJ7
+
+Fellowship staff expect genuine Entire coding-session evidence to be available with the submitted Git revision.
+
+Perform a READ-ONLY inspectione checkpoints.
+
+Do not commit, push, upload, synchronize, or submit anything.
+
+Report findings and stop for authorization.
+
+---
+
+INSURANCE-01 — Step 45: Publish authorized Entire checkpoint.
+
+I explicitly authorize publishing the verified Entire checkpoint to my public GitHub submission repository.
+
+Repository:
+https://github.com/418todayhope-sys/ch03-premium-audit.git
+
+Published code commit:
+a1ace9396671ac6838eef2226373d733604050cd
+
+Entire checkpoint:
+01M6PH49FR53AABARMSCWB4ZJ7
+
+Instructions:
+
+1. Verify the checkpoint's exact local Git ref and object SHA.
+2. Confirm it belongs to the published code commit and contains genuine INSURANCE-01 development evidence.
+3. Check the checkpoint for credentials, tokens, passwords, or unrelated private conversations. Stop if any are found.
+4. Preserve all existing Git history and settings.
+5. Push ONLY the verified checkpoint ref to the submission remote, using an explicit Git refspec.
+6. Do not enable automatic session uploads or push the shadow branch or other checkpoint refs.
+7. Do not push to the GitRollTraining origin.
+8. Verify the remote checkpoint ref points to the expected Git object.
+9. Confirm the published main branch remains at the original authorized commit.
+10. Verify the checkpoint can be retrieved and linked to the published commit.
+
+Report:
+- Publication result
+- Published checkpoint ref
+- Verified Git object SHA
+- Entire checkpoint linkage
+- Any remaining access or evaluation limitations
+
+Do not create new commits, modify code, rewrite history, deploy, or submit to the fellowship.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 1: READ-ONLY BASELINE.
+
+Inspect the existing repository without modifying any files, branches, Git history, or Entire evidence.
+
+1. Report repository path, current branch, HEAD, working-tree status, and remotes (redact credentials).
+2. Verify whether original submission commit a1ace9396671ac6838eef2226373d733604050cd exists locally and how HEAD relates to it.
+3. Inspect Entire status, capture configuration, local checkpoint/session references, and whether automatic uploads are disabled. Check for checkpoint 01M6PH49FR53AABARMSCWB4ZJ7 using only read-only commands.
+4. Inventory six classification CSVs, classification-review.json, audit-questions.md, deliverables/audit-report.md, original interviews, Skill instructions, and tests.
+5. Locate the classification rules and tests relevant to Severn's $71,250.45 estimator. Identify the first bounded improvement candidate, supported by exact source files and line references.
+
+Return a concise VERIFIED / UNKNOWN / RISK baseline report. Do not edit, generate files, run tests that alter files, create branches, commit, push, upload, synchronize Entire, or submit. STOP after reporting.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 2: BRANCH PRESERVATION.
+
+Create a local branch named omega/insurance01-attempt2 from the verified original submission commit a1ace9396671ac6838eef2226373d733604050cd.
+
+First check whether the branch already exists. If it exists, do not overwrite or reset it; report and stop.
+
+Preserve all 15 untracked docs files, original interviews, Entire refs, and Git history. Do not clean, stash, stage, edit, or delete anything.
+
+After switching branches, verify current branch, HEAD, Git status, and preservation of the original main commit.
+
+Do not commit, push, upload Entire sessions, or submit. Report results and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 3: SEVERN EVIDENCE INVESTIGATION.
+
+On branch omega/insurance01-attempt2, independently investigate Marissa Gale (SH-E06), payroll $71,250.45.
+
+1. Read the original site-sign-in log, payroll register, employer description, field notes, classification guide, and preserved Nadia Brennan interview.
+2. Determine whether the December 2 county-inspector entry is evidence of Marissa visiting the site or belongs to an external visitor.
+3. Trace how homebuilding_processing.py and rule_evaluator.py count unidentified visits and classify office employees.
+4. Check whether existing tests encode an unsupported OPEN result rather than the actual business rule.
+5. Determine the evidence-supported classification, citing exact source files, records, and relevant code lines. Separate VERIFIED facts, ASSUMPTIONS, and OPEN questions.
+6. Propose the smallest reusable correction and independent regression tests without hard-coding Marissa or other sample employees.
+
+READ-ONLY INVESTIGATION ONLY. Do not edit files, run generators, create commits, push, upload Entire evidence, or submit. Report findings and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 4: TARGETED SEVERN CORRECTION.
+
+On omega/insurance01-attempt2, implement the smallest reusable correction to the homebuilding adapter.
+
+1. Distinguish explicitly documented external visitors from genuinely unidentified employee visits using evidence in the source records, not employer names, employee IDs, or hard-coded sample answers.
+2. Exclude supported external visitors from office-employee site-day bounds while preserving their records, citations, and employer-confirmation questions.
+3. Preserve OPEN treatment for genuinely ambiguous identities, conflicting evidence, or incomplete employee visit records.
+4. Keep the existing four-day/five-day business rule unchanged.
+5. Add independent regression tests for four versus five employee days, external inspectors, unidentified employees, and conflicting identities. Test business requirements, not existing output snapshots.
+6. Run the focused tests and relevant existing regression tests. Report exact commands, pass/fail counts, and any unintended behavior changes.
+
+Do not regenerate final deliverables yet. Do not modify Annapolis, Bay Crest, or unrelated employer logic. Preserve the 15 untracked docs files, original interviews, and Entire evidence. Do not commit, push, upload, or submit.
+
+Report the changed files, test results, remaining uncertainties, and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 5: FULL-SUITE ERROR DIAGNOSIS.
+
+On omega/insurance01-attempt2, investigate the two errors from full unittest discovery that prevented 11 report tests from running.
+
+1. Capture the exact failing test names, tracebacks, assertions, and source-file references.
+2. Determine whether the failures arise from stale generated review data, a real implementation defect, or test setup problems.
+3. Distinguish expected changes from the Severn correction from unrelated failures.
+4. Identify the smallest safe way to restore independent test verification without weakening assertions or hard-coding expected answers.
+5. Report whether regenerated deliverables will be required later and which files would change.
+
+Do not edit files, regenerate final deliverables, alter tests, commit, push, upload Entire evidence, or submit. Preserve all original evidence. Return VERIFIED findings, proposed correction, and remaining UNKNOWN items. Stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 6: INDEPENDENT TEST VERIFICATION.
+
+On branch omega/insurance01-attempt2, repair the full-suite test setup so it can verify the corrected Severn results independently.
+
+1. Update only the necessary test setup and assertions to build a fresh CSV/review → questions → report dependency chain in an isolated temporary directory.
+2. Derive expected financial totals independently from original payroll records and classification rules, not from the implementation's generated outputs.
+3. Replace brittle fixed finding/proposal counts with checks for specific required findings, questions, evidence citations, and reconciliation obligations.
+4. Preserve all tests rejecting stale, tampered, inconsistent, or incomplete evidence. Do not weaken assertions merely to obtain passing tests.
+5. Verify that corrected Severn results are recognized and all five other employer results remain unchanged.
+6. Run the complete test suite, report exact pass/fail/error counts, and investigate any remaining failures.
+7. Run git diff --check and report the changed files.
+
+Do not modify production classification logic or regenerate tracked final deliverables in this step. Preserve original interviews, 15 untracked planning files, Git history, and Entire evidence. Do not commit, push, upload, or submit.
+
+Stop after reporting verified results and remaining limitations.
+
+---
+
+Codex Prompt 7 — Read-only investigation
+ Copy
+INSURANCE-01 Omega Attempt 2 — STEP 7: LARKSPUR CLASSIFICATION INVESTIGATION.
+
+On branch omega/insurance01-attempt2, independently investigate Larkspur's catering and restaurant payroll classifications.
+
+1. Read original Larkspur records, payroll, revenue evidence, classification guide, and Nadia Brennan interview.
+2. Verify the 40% off-site catering gross-receipts threshold and the classifications supported by evidence.
+3. Trace how current code calculates the threshold and allocates employee payroll.
+4. Compare independently calculated results against current output. Identify unsupported OPEN or incorrect decisions.
+5. Review tests for hard-coded assumptions, threshold errors, and missing boundary cases.
+6. Propose the smallest reusable correction and independent regression tests if a genuine defect is established.
+7. Report the latest exact full-suite test count and status from Step 6 if preserved output is available; do not rerun tests just to retrieve it.
+
+Separate VERIFIED, ASSUMPTIONS, and OPEN findings. Cite source files and lines.
+
+READ-ONLY. No edits, regeneration, commits, pushes, Entire uploads, or submission. Report and stop.
+
+---
+
+Codex Prompt 8 — Read-only investigation
+ Copy
+INSURANCE-01 Omega Attempt 2 — STEP 8: SEVERN SUBCONTRACTOR VERIFICATION.
+
+On omega/insurance01-attempt2, independently investigate Severn Homebuilders' $45,945.65 OPEN subcontractor payment basis.
+
+1. Read original subcontractor payments, insurance certificates, employer notes, classification guide, and Nadia Brennan interview.
+2. Reconcile each payment to its subcontractor, work performed, certificate identity, and coverage dates.
+3. Independently apply the 60% uninsured-subcontractor rule.
+4. Separate VERIFIED adjustments from genuinely OPEN documentation or identity questions.
+5. Compare results against existing outputs.
+6. Trace implementation logic for defects or unnecessary uncertainty.
+7. Identify missing independent regression tests.
+8. Propose the smallest supported correction, if justified.
+
+Provide source references, exact financial calculations, and VERIFIED / ASSUMPTION / OPEN findings.
+
+READ-ONLY. No edits, deliverable regeneration, commits, pushes, uploads, or submission. Report and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 9: CERTIFICATE LOOKUP CORRECTION.
+
+On branch omega/insurance01-attempt2, implement the smallest reusable correction to certificate lookup.
+
+1. Fix capitalization-only lookup failures in homebuilding_processing.py while preserving original certificate and payee names.
+2. Treat capitalization-insensitive matches as retrieval candidates, not automatic proof of identity. Preserve existing identity verification, coverage-date rules, and OPEN treatment for unresolved mismatches.
+3. Do not introduce fuzzy matching or automatically equate differently named businesses.
+4. Add independent adapter-level regression tests for capitalization differences, exact matches, expired certificates, missing certificates, and genuinely different names.
+5. Add a fractional-cent financial regression to verify appropriate Decimal rounding under the 60% rule.
+6. Run focused tests and the complete test suite. Report exact pass/fail/error counts and any behavior changes.
+7. Confirm Severn's current results remain correct and Annapolis, Bay Crest, Harbor Point, Larkspur, and Patuxent remain unchanged.
+8. Run git diff --check and report changed files.
+
+Do not regenerate final deliverables. Preserve the 15 untracked planning files, original interviews, Git history, and Entire evidence. Do not commit, push, upload, or submit.
+
+Report findings and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 10: CONTROLLED DELIVERABLE REFRESH.
+
+On omega/insurance01-attempt2, regenerate and independently verify the final deliverables using the corrected classification engine.
+
+1. Generate all outputs in an isolated temporary directory. Validate the complete CSV → review JSON → audit questions → audit report dependency chain before replacing tracked files.
+
+2. Compare against the original submission. Expect changes only to Severn's CSV, classification-review.json, audit-questions.md, and audit-report.md. Stop before replacement if unexpected artifacts differ.
+
+3. After validation, update only those four deliverables on the Omega branch.
+
+4. Independently reconcile all six employers against original records. Verify financial totals, evidence citations, OPEN/PROPOSED distinctions, and two-employer call priorities.
+
+5. Verify Marissa's corrected C-110 treatment and retain Kent's unresolved certificate treatment. Do not promote unsupported OPEN items.
+
+6. Run the full test suite, artifact validation, and git diff --check. Report exact results and changed files.
+
+7. Confirm preservation of main, original interviews, source records, 15 untracked planning files, and Entire refs/settings.
+
+Do not commit, push, upload Entire evidence, publish, or submit.
+
+Report PASS/PARTIAL/FAIL, unexpected differences, and remaining risks. Stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 11: FINAL GENERALIZATION AND ENTIRE INSPECTION.
+
+On omega/insurance01-attempt2, conduct a bounded final verification without modifying repository files.
+
+1. Test the current classification engine against a small set of unseen synthetic employer descriptions in isolated temporary directories. Include renamed employers, paraphrased job duties, reordered records, and missing or ambiguous evidence. Preserve equivalent expected classifications where facts are unchanged; require OPEN when evidence is insufficient.
+
+2. Identify sample-dependent behavior, hard-coded identities, unsupported classifications, or failures to generalize. Do not modify code automatically.
+
+3. Inspect Entire status, checkpoint/session refs, capture, and upload settings. Investigate the exited-versus-active discrepancy read-only.
+
+4. Confirm all nine artifacts, original main, Omega branch, interviews, 15 planning files, and absence of staged or committed Omega changes.
+
+5. Reuse the 357-test result unless targeted new checks are needed. Avoid unnecessarily rerunning the full suite.
+
+6. Report PASS / PARTIAL / FAIL, exact generalization results, Entire evidence, risks, and readiness for a separately authorized commit.
+
+Keep synthetic outputs outside the repository. No production edits, commits, pushes, uploads, or submissions. Stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 12: RESTAURANT CLASSIFICATION SAFEGUARD.
+
+On branch omega/insurance01-attempt2, correct the verified restaurant-adapter generalization defect.
+
+1. Review the Step 11 synthetic evidence and restaurant logic in employer_processing.py, especially lines 446 and 495. Confirm the failure before editing.
+
+2. Implement the smallest reusable change ensuring conflicting nonrestaurant duties prevent unsupported title-based F-710 classification.
+
+3. When classification evidence is insufficient, return OPEN with a proposed treatment and employer-confirmation question. Never invent an electrical code.
+
+4. Preserve valid restaurant and catering classifications.
+
+5. Add independent regression tests for conflicting duties, paraphrased descriptions, normal restaurant work, and missing evidence.
+
+6. Run focused tests, the full existing suite, and all 14 synthetic generalization scenarios. Report exact results.
+
+7. Verify all six original employer results and nine deliverables remain unchanged. Stop if unexpected changes occur.
+
+8. Run git diff --check and verify preservation of original Git, interviews, planning files, and Entire evidence.
+
+Do not fix the other three wording failures yet.
+
+Do not regenerate deliverables, commit, push, upload Entire evidence, or submit.
+
+Report and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 13: HOMEBUILDING GENERALIZATION.
+
+On omega/insurance01-attempt2, address only the Step 11 homebuilding business-description paraphrase failure ($250.10 incorrectly OPEN).
+
+1. Reproduce the failure and confirm semantic equivalence.
+2. Trace employer_processing.py industry detection.
+3. Implement the smallest reusable correction without hard-coding sample descriptions or answers.
+4. Preserve OPEN for genuinely ambiguous business activity.
+5. Add independent positive and negative regression tests.
+6. Run focused tests, the full suite, and all 14 generalization scenarios.
+7. Verify all six original employer results and nine deliverables remain unchanged. Run git diff --check.
+
+Do not fix the other two failures yet. Preserve Git history, interviews, sources, planning files, and Entire evidence.
+
+No deliverable regeneration, commits, pushes, uploads, or submission.
+
+Report results and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 14: ESTIMATOR-DUTY GENERALIZATION.
+
+On omega/insurance01-attempt2, fix only the remaining $120.05 estimator-duty paraphrase failure.
+
+1. Reproduce the failure and compare both descriptions against original classification rules.
+2. Trace homebuilding_processing.py duty recognition near line 206.
+3. Implement the smallest reusable correction for equivalent estimator duties, without hard-coded phrases, employee identities, or payroll amounts.
+4. Preserve the four/five-day site-visit threshold and OPEN outcomes for ambiguous, conflicting, or unsupported duties.
+5. Add independent positive and negative regression tests.
+6. Run focused tests, the complete suite, and all 14 synthetic generalization scenarios.
+7. Verify all six original employer results and nine deliverables remain unchanged. Run git diff --check.
+
+Do not address the legal-office failure yet. Preserve original sources, interviews, 15 planning files, main branch, Git history, and Entire evidence.
+
+Do not regenerate deliverables, commit, push, upload, or submit.
+
+Report exact results, changes, remaining failures, and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 15: LEGAL-OFFICE GENERALIZATION.
+
+On omega/insurance01-attempt2, address only the remaining $100.00 legal-office paraphrase failure.
+
+1. Reproduce and independently verify equivalent duties against the original guide and Nadia's interview.
+2. Trace legal_office_processing.py to identify the wording dependency.
+3. Implement the smallest reusable correction without hard-coded sample answers.
+4. Preserve OPEN for ambiguous or conflicting duties. Do not apply contractors' five-day rule to legal offices without a field code.
+5. Preserve Harbor Point's existing decisions, including Tomas's unresolved case, unless independently justified.
+6. Add positive, negative, and boundary regression tests.
+7. Run focused tests, the full suite, and all 14 synthetic scenarios.
+8. Verify all six original employer results and nine deliverables remain unchanged. Run git diff --check.
+9. Preserve main, sources, interviews, 15 planning files, Git history, and Entire evidence.
+
+Do not broaden scope, regenerate deliverables, commit, push, upload, or submit.
+
+Report exact results, remaining limitations, and stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 16: FINAL PRE-COMMIT READINESS AUDIT.
+
+Perform a READ-ONLY final audit of omega/insurance01-attempt2.
+
+1. Compare every tracked change against original submission commit a1ace9396671ac6838eef2226373d733604050cd.
+2. Verify all nine deliverables are consistent with current production logic and all unaffected CSVs remain unchanged.
+3. Confirm evidence for 382 passing tests, 14/14 generalization scenarios, reconciliation, OPEN/PROPOSED handling, and question coverage.
+4. Review Skill instructions and reproducibility commands for critical gaps.
+5. Inspect Entire evidence and report unresolved status discrepancies. Do not repair or upload.
+6. Verify main, original interviews, sources, Git history, and 15 untracked planning files are preserved.
+7. Report exact files eligible for a future authorized commit, excluding unrelated files.
+8. Return PASS / PARTIAL / FAIL, remaining blockers, and an Attempt 1 versus Attempt 2 comparison.
+
+READ-ONLY. No edits, staging, commits, pushes, uploads, or submissions. Stop.
