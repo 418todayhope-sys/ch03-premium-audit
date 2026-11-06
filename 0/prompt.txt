@@ -1031,3 +1031,41 @@ Perform a READ-ONLY final audit of omega/insurance01-attempt2.
 8. Return PASS / PARTIAL / FAIL, remaining blockers, and an Attempt 1 versus Attempt 2 comparison.
 
 READ-ONLY. No edits, staging, commits, pushes, uploads, or submissions. Stop.
+
+---
+
+INSURANCE-01 Omega Attempt 2 — STEP 17: AUTHORIZED LOCAL COMMIT.
+
+I authorize ONE local Git commit on omega/insurance01-attempt2.
+
+1. Verify branch and original main commit.
+2. Compare working-tree changes with Step 16. STOP if unexpected.
+3. Stage ONLY these exact 15 paths:
+
+deliverables/audit-questions.md
+deliverables/audit-report.md
+deliverables/classification-review.json
+deliverables/codes/severn-homebuilders.csv
+skills/class-code-assistant/employer_processing.py
+skills/class-code-assistant/homebuilding_processing.py
+skills/class-code-assistant/legal_office_processing.py
+skills/class-code-assistant/tests/real_audit_support.py
+skills/class-code-assistant/tests/test_audit_questions.py
+skills/class-code-assistant/tests/test_audit_report.py
+skills/class-code-assistant/tests/test_electrical_processing.py
+skills/class-code-assistant/tests/test_employer_processing.py
+skills/class-code-assistant/tests/test_homebuilding_processing.py
+skills/class-code-assistant/tests/test_legal_office_processing.py
+skills/class-code-assistant/tests/test_preview.py
+
+4. Check staged files against the allowlist and run git diff --cached --check.
+5. Make ONE local commit:
+fix: improve premium audit classification reliability and verification
+6. Report the SHA, parent, committed files, branch, and working-tree status.
+7. Confirm main, 15 planning files, original evidence, and Entire refs/settings are preserved.
+
+STOP if hooks attempt unapproved external actions.
+
+NO pushing, Entire uploads, publication, resubmission, amendments, or additional commits.
+
+Report and STOP.
